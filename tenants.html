@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tenants – My Tenant Manager</title>
+
+  <!-- =================================
+       HARD BLOCK RENDER (NO FLASH)
+  ================================= -->
+  <style>
+    html {
+      visibility: hidden;
+    }
+  </style>
+
+  <!-- =================================
+       AUTH GATE
+  ================================= -->
+  <script type="module">
+    import { supabase } from "./scripts/supabase.js";
+
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.replace("/login.html");
+    } else {
+      document.documentElement.style.visibility = "visible";
+    }
+  </script>
+</head>
+
+<body>
+
+  <h1>Tenant Management</h1>
+  <p>Bronze Tier</p>
+
+  <hr>
+
+  <!-- =================================
+       ADD TENANT
+  ================================= -->
+  <h2>Add Tenant</h2>
+
+  <label>Tenant Name</label><br>
+  <input id="tenantName" type="text"><br><br>
+
+  <label>Monthly Rent</label><br>
+  <input id="monthlyRent" type="number" step="0.01"><br><br>
+
+  <label>Rent Due Day (1–31)</label><br>
+  <input id="rentDueDay" type="number" min="1" max="31"><br><br>
+
+  <button id="addTenantBtn">Add Tenant</button>
+  <p id="tenantMessage">N/A</p>
+
+  <hr>
+
+  <!-- =================================
+       TENANT LIST
+  ================================= -->
+  <h2>Your Tenants</h2>
+
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Tenant Name</th>
+        <th>Monthly Rent</th>
+        <th>Due Day</th>
+      </tr>
+    </thead>
+    <tbody id="tenantTableBody">
+      <tr>
+        <td colspan="3">N/A</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <button onclick="window.location.href='/index.html'">
+    Back to Dashboard
+  </button>
+
+  <button id="logoutBtn">Logout</button>
+
+  <!-- =================================
+       PAGE LOGIC
+  ================================= -->
+  <script type="module" src="./scripts/tenants.js"></script>
+
+</body>
+</html>
