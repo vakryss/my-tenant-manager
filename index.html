@@ -56,6 +56,11 @@
     <span id="profileCurrency">N/A</span>
   </p>
 
+  <p>
+    <strong>Full Name:</strong>
+    <span id="profileFullName">N/A</span>
+  </p>
+
   <hr>
 
   <!-- =================================
@@ -118,6 +123,9 @@
       document.getElementById("profileCurrency").textContent =
         `${data.currency_symbol} (${data.currency_code})`;
 
+      document.getElementById("profileFullName").textContent =
+        data.full_name || "N/A";
+
       document.getElementById("fullNameInput").value =
         data.full_name || "";
     }
@@ -148,6 +156,9 @@
       }
 
       message.textContent = "Profile updated successfully.";
+
+      // 🔑 Refresh displayed data immediately
+      await loadProfile();
     }
 
     /* -----------------------------
