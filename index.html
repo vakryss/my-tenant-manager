@@ -38,6 +38,14 @@
       }
     });
   </script>
+  
+<button id="logoutBtn">Logout</button>
+<script type="module">
+  import { logout } from "./scripts/session.js";
+
+  const logoutBtn = document.getElementById("logoutBtn");
+  logoutBtn.addEventListener("click", logout);
+</script>
 
 </body>
 </html>
