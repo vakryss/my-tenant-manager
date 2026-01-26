@@ -59,6 +59,19 @@
   <hr>
 
   <!-- =================================
+       LANDLORD PROFILE (EDITABLE)
+  ================================= -->
+  <h3>Edit Profile</h3>
+
+  <label>Full Name</label><br>
+  <input id="fullNameInput" type="text"><br><br>
+
+  <button id="saveProfileBtn">Save Profile</button>
+  <p id="profileMessage">N/A</p>
+
+  <hr>
+
+  <!-- =================================
        SUPABASE TEST
   ================================= -->
   <button id="testBtn">Test Supabase Connection</button>
@@ -83,12 +96,11 @@
     ----------------------------- */
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser();
-
       if (!user) return;
 
       const { data, error } = await supabase
         .from("users_profile")
-        .select("email, country, currency_code, currency_symbol")
+        .select("email, country, currency_code, currency_symbol, full_name")
         .eq("id", user.id)
         .single();
 
@@ -105,6 +117,37 @@
 
       document.getElementById("profileCurrency").textContent =
         `${data.currency_symbol} (${data.currency_code})`;
+
+      document.getElementById("fullNameInput").value =
+        data.full_name || "";
+    }
+
+    /* -----------------------------
+       UPDATE PROFILE (FULL NAME)
+    ----------------------------- */
+    async function updateProfile() {
+      const message = document.getElementById("profileMessage");
+      const fullName = document.getElementById("fullNameInput").value.trim();
+
+      message.textContent = "Saving...";
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        message.textContent = "Not authenticated.";
+        return;
+      }
+
+      const { error } = await supabase
+        .from("users_profile")
+        .update({ full_name: fullName || "N/A" })
+        .eq("id", user.id);
+
+      if (error) {
+        message.textContent = error.message;
+        return;
+      }
+
+      message.textContent = "Profile updated successfully.";
     }
 
     /* -----------------------------
@@ -124,6 +167,10 @@
     /* -----------------------------
        INIT
     ----------------------------- */
+    document
+      .getElementById("saveProfileBtn")
+      .addEventListener("click", updateProfile);
+
     loadProfile();
   </script>
 
