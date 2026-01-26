@@ -4,9 +4,15 @@
   <meta charset="UTF-8">
   <title>My Tenant Manager – Bronze</title>
 </head>
-<body>
 
-  <h1>My Tenant Manager</h1>
+<body>
+  
+<script type="module">
+  import { requireAuth } from "./scripts/session.js";
+  requireAuth();
+</script>
+  
+<h1>My Tenant Manager</h1>
   <p>Bronze Tier</p>
 
   <button id="testBtn">Test Supabase Connection</button>
