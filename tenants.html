@@ -13,7 +13,9 @@
   <!-- AUTH GATE (FROZEN) -->
   <script type="module">
     import { supabase } from "./scripts/supabase.js";
+
     const { data: { session } } = await supabase.auth.getSession();
+
     if (!session) {
       window.location.replace("/login.html");
     } else {
@@ -21,8 +23,11 @@
     }
   </script>
 
+  <!-- CORE STYLES -->
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -31,7 +36,11 @@
       color: #1a1a1a;
     }
 
-    .app { display: flex; min-height: 100vh; overflow-x: hidden; }
+    .app {
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
     /* SIDEBAR — DO NOT TOUCH */
     .sidebar {
@@ -45,7 +54,11 @@
       flex-shrink: 0;
     }
 
-    .nav-group { display: flex; flex-direction: column; gap: 2px; }
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
     .nav-link {
       display: block;
@@ -103,8 +116,15 @@
       max-width: 90vw;
     }
 
-    .content { flex: 1; padding: 16px; }
-    .container { max-width: 1100px; margin: 0 auto; }
+    .content {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
     .page-header {
       display: flex;
@@ -113,7 +133,10 @@
       margin-bottom: 12px;
     }
 
-    h1 { font-size: 1.4rem; margin: 0; }
+    h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
 
     .card {
       background: #fff;
@@ -122,9 +145,22 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { padding: 8px; border-bottom: 1px solid #e5e7eb; }
-    th { background: #f1f5f9; font-weight: 600; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
 
     button.primary {
       padding: 8px 12px;
@@ -192,147 +228,154 @@
     }
 
     @media (min-width: 768px) {
-      .mobile-header { display: none; }
-      .sidebar { display: flex; }
+      .mobile-header {
+        display: none;
+      }
+
+      .sidebar {
+        display: flex;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<!-- MOBILE HEADER -->
-<div class="mobile-header">
-  <strong>My Tenant Manager</strong>
-  <button class="menu-btn" id="openMenu">☰ Menu</button>
-</div>
-
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu-content">
-    <div class="nav-group">
-      <a class="nav-link" href="/index.html">Dashboard</a>
-      <a class="nav-link active" href="/tenants.html">Tenants</a>
-      <a class="nav-link" href="/rent.html">Rent</a>
-      <a class="nav-link" href="/utilities.html">Utilities</a>
-      <a class="nav-link" href="/payments.html">Payments</a>
-      <a class="nav-link" href="/ledger.html">General Ledger</a>
-      <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
-      <a class="nav-link" href="/profile.html">My Profile</a>
-    </div>
-    <div class="nav-group">
-      <a class="nav-link" href="/settings.html">App Settings</a>
-      <a class="nav-link" href="#" id="mobileLogout">Logout</a>
-    </div>
+  <!-- MOBILE HEADER -->
+  <div class="mobile-header">
+    <strong>My Tenant Manager</strong>
+    <button class="menu-btn" id="openMenu">☰ Menu</button>
   </div>
-</div>
 
-<div class="app">
-
-  <!-- DESKTOP SIDEBAR (RESTORED) -->
-  <aside class="sidebar">
-    <div class="nav-group">
-      <a class="nav-link" href="/index.html">Dashboard</a>
-      <a class="nav-link active" href="/tenants.html">Tenants</a>
-      <a class="nav-link" href="/rent.html">Rent</a>
-      <a class="nav-link" href="/utilities.html">Utilities</a>
-      <a class="nav-link" href="/payments.html">Payments</a>
-      <a class="nav-link" href="/ledger.html">General Ledger</a>
-      <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
-      <a class="nav-link" href="/profile.html">My Profile</a>
-    </div>
-    <div class="nav-group">
-      <a class="nav-link" href="/settings.html">App Settings</a>
-      <a class="nav-link" href="#" id="logoutBtn">Logout</a>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="content">
-    <div class="container">
-
-      <div class="page-header">
-        <h1>Tenants</h1>
-        <button id="openAddModal" class="primary">+ Add Tenant</button>
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-content">
+      <div class="nav-group">
+        <a class="nav-link" href="/index.html">Dashboard</a>
+        <a class="nav-link active" href="/tenants.html">Tenants</a>
+        <a class="nav-link" href="/rent.html">Rent</a>
+        <a class="nav-link" href="/utilities.html">Utilities</a>
+        <a class="nav-link" href="/payments.html">Payments</a>
+        <a class="nav-link" href="/ledger.html">General Ledger</a>
+        <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
+        <a class="nav-link" href="/profile.html">My Profile</a>
       </div>
 
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Tenant Name</th>
-              <th>Monthly Rent</th>
-              <th>Due Day</th>
-              <th>Utilities</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tenantTableBody"></tbody>
-        </table>
+      <div class="nav-group">
+        <a class="nav-link" href="/settings.html">App Settings</a>
+        <a class="nav-link" href="#" id="mobileLogout">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-group">
+        <a class="nav-link" href="/index.html">Dashboard</a>
+        <a class="nav-link active" href="/tenants.html">Tenants</a>
+        <a class="nav-link" href="/rent.html">Rent</a>
+        <a class="nav-link" href="/utilities.html">Utilities</a>
+        <a class="nav-link" href="/payments.html">Payments</a>
+        <a class="nav-link" href="/ledger.html">General Ledger</a>
+        <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
+        <a class="nav-link" href="/profile.html">My Profile</a>
       </div>
 
-    </div>
-  </main>
-</div>
+      <div class="nav-group">
+        <a class="nav-link" href="/settings.html">App Settings</a>
+        <a class="nav-link" href="#" id="logoutBtn">Logout</a>
+      </div>
+    </aside>
 
-<!-- ADD + EDIT MODALS (unchanged, already working) -->
-<script type="module" src="./scripts/tenants.js"></script>
-<!-- ADD TENANT MODAL -->
-<div class="modal-overlay" id="addModal">
-  <div class="modal">
-    <h2>Add Tenant</h2>
+    <!-- MAIN CONTENT -->
+    <main class="content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Tenants</h1>
+          <button id="openAddModal" class="primary">+ Add Tenant</button>
+        </div>
 
-    <label>Tenant Name</label>
-    <input id="addTenantName" type="text">
+        <div class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>Tenant Name</th>
+                <th>Monthly Rent</th>
+                <th>Due Day</th>
+                <th>Utilities</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tenantTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
 
-    <label>Monthly Rent</label>
-    <input id="addMonthlyRent" type="number">
+  </div>
 
-    <label>Rent Due Day</label>
-    <input id="addRentDueDay" type="number" min="1" max="31">
+  <!-- SCRIPT -->
+  <script type="module" src="./scripts/tenants.js"></script>
 
-    <label>Utilities</label>
-    <div class="checkbox-group" id="addUtilities">
-      <label><input type="checkbox" value="Electric"> Electric</label>
-      <label><input type="checkbox" value="Water"> Water</label>
-      <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
-    </div>
+  <!-- ADD TENANT MODAL -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal">
+      <h2>Add Tenant</h2>
 
-    <div class="modal-actions">
-      <button class="secondary" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
-      <button class="primary" id="submitAdd">Save</button>
+      <label>Tenant Name</label>
+      <input id="addTenantName" type="text">
+
+      <label>Monthly Rent</label>
+      <input id="addMonthlyRent" type="number">
+
+      <label>Rent Due Day</label>
+      <input id="addRentDueDay" type="number" min="1" max="31">
+
+      <label>Utilities</label>
+      <div class="checkbox-group" id="addUtilities">
+        <label><input type="checkbox" value="Electric"> Electric</label>
+        <label><input type="checkbox" value="Water"> Water</label>
+        <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="secondary" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+        <button class="primary" id="submitAdd">Save</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- EDIT TENANT MODAL -->
-<div class="modal-overlay" id="editModal">
-  <div class="modal">
-    <h2>Edit Tenant</h2>
+  <!-- EDIT TENANT MODAL -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h2>Edit Tenant</h2>
 
-    <input type="hidden" id="editTenantId">
+      <input type="hidden" id="editTenantId">
 
-    <label>Tenant Name</label>
-    <input id="editTenantName" type="text">
+      <label>Tenant Name</label>
+      <input id="editTenantName" type="text">
 
-    <label>Monthly Rent</label>
-    <input id="editMonthlyRent" type="number">
+      <label>Monthly Rent</label>
+      <input id="editMonthlyRent" type="number">
 
-    <label>Rent Due Day</label>
-    <input id="editRentDueDay" type="number" min="1" max="31">
+      <label>Rent Due Day</label>
+      <input id="editRentDueDay" type="number" min="1" max="31">
 
-    <label>Utilities</label>
-    <div class="checkbox-group" id="editUtilities">
-      <label><input type="checkbox" value="Electric"> Electric</label>
-      <label><input type="checkbox" value="Water"> Water</label>
-      <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
-    </div>
+      <label>Utilities</label>
+      <div class="checkbox-group" id="editUtilities">
+        <label><input type="checkbox" value="Electric"> Electric</label>
+        <label><input type="checkbox" value="Water"> Water</label>
+        <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
+      </div>
 
-    <div class="modal-actions">
-      <button class="secondary" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
-      <button class="primary" id="submitEdit">Update</button>
+      <div class="modal-actions">
+        <button class="secondary" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
+        <button class="primary" id="submitEdit">Update</button>
+      </div>
     </div>
   </div>
-</div>
 
 </body>
-</html>  
+</html>
