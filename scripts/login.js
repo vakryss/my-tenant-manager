@@ -25,12 +25,14 @@ if (togglePassword && passwordInput) {
 if (loginBtn) {
   loginBtn.addEventListener("click", async () => {
     message.textContent = "Logging in...";
+    loginBtn.disabled = true;
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     if (!email || !password) {
       message.textContent = "Email and password are required.";
+      loginBtn.disabled = false;
       return;
     }
 
@@ -40,19 +42,26 @@ if (loginBtn) {
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      if (!data.session) {
-        throw new Error("Login failed. No session created.");
+      if (!data || !data.session) {
+        throw new Error("Login failed. Please try again.");
       }
 
       message.textContent = "Login successful.";
 
-      // Temporary redirect target
-      window.location.href = "/index.html";
+      /* 
+        Use replace to prevent back navigation
+        into the login page after authentication
+      */
+      window.location.replace("/index.html");
 
     } catch (err) {
-      message.textContent = err.message || "Login failed.";
+      message.textContent =
+        err?.message || "Invalid login credentials.";
+      loginBtn.disabled = false;
     }
   });
 }
