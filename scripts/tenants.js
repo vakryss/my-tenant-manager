@@ -19,29 +19,73 @@ document.addEventListener("DOMContentLoaded", () => {
   function openModal(m) { if (m) m.style.display = "flex"; }
   function closeModal(m) { if (m) m.style.display = "none"; }
 
-  function renderStatus(status, dateLabel, dateValue) {
-    const colors = {
-      Active: "background:#16a34a;color:white;",
-      "Moved Out": "background:#9ca3af;color:black;",
-      "Left Without Notice": "background:#000;color:white;"
-    };
+  function renderStatus(status, dateLabel, dateValue, tenantId) {
+  const styles = {
+    Active: "background:#16a34a;color:white;",
+    "Moved Out": "background:#9ca3af;color:black;",
+    "Left Without Notice": "background:#000;color:white;"
+  };
 
-    let info = "";
-    if (dateValue) {
-      info = `
-        <span style="font-style:italic;cursor:pointer;margin-left:4px;"
-              title="${dateLabel}: ${dateValue}">
-          i
-        </span>`;
-    }
-
+  if (!dateValue) {
     return `
-      <span style="padding:4px 8px;border-radius:6px;font-size:0.75rem;${colors[status]}">
-        ${status}${info}
+      <span style="
+        padding:4px 8px;
+        border-radius:6px;
+        font-size:0.75rem;
+        ${styles[status]}
+      ">
+        ${status}
       </span>
     `;
   }
 
+  return `
+    <span style="position:relative;display:inline-flex;align-items:center;">
+      <span style="
+        padding:4px 8px;
+        border-radius:6px;
+        font-size:0.75rem;
+        ${styles[status]}
+      ">
+        ${status}
+      </span>
+
+      <span
+        class="status-info"
+        data-tooltip-id="tooltip-${tenantId}"
+        style="
+          margin-left:6px;
+          font-style:italic;
+          cursor:pointer;
+          user-select:none;
+        "
+      >i</span>
+
+      <div
+        id="tooltip-${tenantId}"
+        class="status-tooltip"
+        style="
+          display:none;
+          position:absolute;
+          top:100%;
+          left:0;
+          margin-top:6px;
+          background:#fff;
+          border:1px solid #d1d5db;
+          padding:6px 8px;
+          border-radius:6px;
+          font-size:0.75rem;
+          white-space:nowrap;
+          z-index:100;
+          box-shadow:0 2px 6px rgba(0,0,0,0.15);
+        "
+      >
+        <strong>${dateLabel}:</strong> ${dateValue}
+      </div>
+    </span>
+  `;
+}
+  
   async function loadTenants() {
     const filter = statusFilter.value;
 
