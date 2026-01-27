@@ -13,6 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitAddBtn = $("submitAdd");
   const submitEditBtn = $("submitEdit");
 
+  // =========================
+// ADD TENANT BUTTON HANDLER
+// =========================
+const openAddBtn = document.getElementById("openAddModal");
+const addModal = document.getElementById("addModal");
+
+if (openAddBtn && addModal) {
+  openAddBtn.addEventListener("click", () => {
+    addModal.style.display = "flex";
+  });
+}
+
   const movedOutWrap = $("movedOutDateWrap");
   const lastSeenWrap = $("lastSeenDateWrap");
 
