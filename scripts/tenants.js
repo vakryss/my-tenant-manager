@@ -12,10 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const submitAddBtn = $("submitAdd");
   const submitEditBtn = $("submitEdit");
-
-  // =========================
-// ADD TENANT BUTTON HANDLER
-// =========================
 const openAddBtn = document.getElementById("openAddModal");
 const addModal = document.getElementById("addModal");
 
