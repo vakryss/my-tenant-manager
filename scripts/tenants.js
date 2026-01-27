@@ -135,7 +135,50 @@ document.addEventListener("DOMContentLoaded", () => {
       tr.querySelector("button").onclick = () => openEditModal(t);
       tenantTableBody.appendChild(tr);
     });
-  }
+    
+ // 🔧 STATUS TOOLTIP HANDLERS (INSERT THIS BLOCK)
+  setTimeout(() => {
+    const tooltips = document.querySelectorAll(".status-tooltip");
+
+    function closeAllTooltips() {
+      tooltips.forEach(t => t.style.display = "none");
+    }
+
+    document.querySelectorAll(".status-info").forEach(icon => {
+      const tooltip = document.getElementById(icon.dataset.tooltipId);
+
+      let hoverTimeout;
+
+      icon.addEventListener("mouseenter", () => {
+        closeAllTooltips();
+        tooltip.style.display = "block";
+      });
+
+      icon.addEventListener("mouseleave", () => {
+        hoverTimeout = setTimeout(() => {
+          tooltip.style.display = "none";
+        }, 150);
+      });
+
+      tooltip.addEventListener("mouseenter", () => {
+        clearTimeout(hoverTimeout);
+      });
+
+      tooltip.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+
+      icon.addEventListener("click", e => {
+        e.stopPropagation();
+        const isVisible = tooltip.style.display === "block";
+        closeAllTooltips();
+        tooltip.style.display = isVisible ? "none" : "block";
+      });
+    });
+
+    document.addEventListener("click", closeAllTooltips);
+  }, 0);
+}
 
   function openEditModal(t) {
     $("editTenantId").value = t.id;
