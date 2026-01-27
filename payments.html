@@ -3,13 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <title>Payments – My Tenant Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- =================================
+       HARD BLOCK RENDER (NO FLASH)
+  ================================= -->
   <style>
-    html { visibility: hidden; }
+    html {
+      visibility: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 6px;
+    }
+
+    h1, p {
+      margin-top: 0;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .button-row button {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    hr {
+      margin: 20px 0;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 24px;
+      }
+
+      input, select, button {
+        font-size: 15px;
+      }
+    }
   </style>
 
+  <!-- =================================
+       AUTH GATE
+  ================================= -->
   <script type="module">
     import { supabase } from "./scripts/supabase.js";
+
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       window.location.replace("/login.html");
@@ -21,52 +104,52 @@
 
 <body>
 
-<h1>Record Payment</h1>
-<p>Bronze Tier</p>
+<div class="container">
 
-<hr>
+  <h1>Record Payment</h1>
+  <p>Bronze Tier</p>
 
-<label>Tenant</label><br>
-<select id="tenantSelect">
-  <option value="">N/A</option>
-</select>
+  <hr>
 
-<br><br>
+  <div class="section">
+    <label>Tenant</label>
+    <select id="tenantSelect">
+      <option value="">N/A</option>
+    </select>
 
-<label>Payment Amount</label><br>
-<input id="paymentAmount" type="number" step="0.01">
+    <br><br>
 
-<br><br>
+    <label>Payment Amount</label>
+    <input id="paymentAmount" type="number" step="0.01">
 
-<label>Payment Date</label><br>
-<input id="paymentDate" type="date">
+    <br><br>
 
-<br><br>
+    <label>Payment Date</label>
+    <input id="paymentDate" type="date">
 
-<label>Notes (optional)</label><br>
-<input id="paymentNotes" type="text">
+    <br><br>
 
-<br><br>
+    <label>Notes (optional)</label>
+    <input id="paymentNotes" type="text">
 
-<button id="savePaymentBtn">Save Payment</button>
-<p id="paymentMessage">N/A</p>
+    <button id="savePaymentBtn">Save Payment</button>
+    <p id="paymentMessage">N/A</p>
+  </div>
 
-<hr>
+  <hr>
 
-<button onclick="window.location.href='/ledger.html'">
-  View General Ledger
-</button>
+  <div class="button-row">
+    <button onclick="window.location.href='/ledger.html'">General Ledger</button>
+    <button onclick="window.location.href='/tenant-ledger.html'">Tenant Ledger</button>
+    <button onclick="window.location.href='/index.html'">Dashboard</button>
+    <button id="logoutBtn">Logout</button>
+  </div>
 
-<button onclick="window.location.href='/tenant-ledger.html'">
-  View Tenant Ledger
-</button>
+</div>
 
-<button onclick="window.location.href='/index.html'">
-  Back to Dashboard
-</button>
-
-<button id="logoutBtn">Logout</button>
-
+<!-- =================================
+     PAGE LOGIC
+================================= -->
 <script type="module" src="./scripts/payments.js"></script>
 
 </body>
