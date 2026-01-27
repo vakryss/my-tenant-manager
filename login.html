@@ -13,7 +13,6 @@
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-      /* Bronze gradient background */
       background: linear-gradient(
         135deg,
         #8f6248,
@@ -25,7 +24,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      color: #fff;
+      color: #000;
     }
 
     /* =========================
@@ -45,15 +44,19 @@
     }
 
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       margin-bottom: 6px;
-      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+      text-align: center;
+      color: #000;
+      text-shadow: 0 0 8px rgba(255,255,255,0.8);
     }
 
     .subtitle {
       font-size: 0.9rem;
       margin-bottom: 26px;
-      opacity: 0.9;
+      text-align: center;
+      color: #000;
+      text-shadow: 0 0 6px rgba(255,255,255,0.8);
     }
 
     /* =========================
@@ -71,7 +74,7 @@
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.6);
       background: rgba(255,255,255,0.15);
-      color: #fff;
+      color: #000;
       outline: none;
     }
 
@@ -86,9 +89,9 @@
       transform: translateY(-50%);
       font-size: 0.9rem;
       pointer-events: none;
-      color: rgba(255,255,255,0.85);
+      color: #000;
       transition: all 0.25s ease;
-      text-shadow: 0 0 6px rgba(255,255,255,0.6);
+      text-shadow: 0 0 6px rgba(255,255,255,0.9);
     }
 
     .field input:focus + label,
@@ -125,8 +128,9 @@
 
       background: #fff;
       color: #8f6248;
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
 
       cursor: pointer;
       margin-top: 10px;
@@ -143,19 +147,24 @@
       margin-top: 14px;
       font-size: 0.85rem;
       display: none;
+      color: #000;
+      text-shadow: 0 0 6px rgba(255,255,255,0.9);
     }
 
     /* =========================
        FOOTER
     ========================= */
     .footer {
-      margin-top: 18px;
-      font-size: 0.85rem;
+      margin-top: 22px;
+      font-size: 0.75rem;
       text-align: center;
+      color: #000;
+      text-shadow: 0 0 6px rgba(255,255,255,0.9);
+      line-height: 1.4;
     }
 
     .footer a {
-      color: #fff;
+      color: #000;
       text-decoration: underline;
     }
   </style>
@@ -164,7 +173,7 @@
 <body>
 
   <div class="card">
-    <h1>Welcome back</h1>
+    <h1>Welcome</h1>
     <div class="subtitle">Login to My Tenant Manager</div>
 
     <!-- EMAIL -->
@@ -180,20 +189,23 @@
       <span class="eye" id="togglePassword">👁</span>
     </div>
 
-    <button id="loginBtn">Login</button>
+    <button id="loginBtn">LOGIN</button>
 
     <div id="message" class="message"></div>
 
     <div class="footer">
       Don’t have an account?
       <a href="/signup.html">Create one</a>
+      <br><br>
+      My Tenant Manager © 2026<br>
+      Created by Kryss Geo Cantago
     </div>
   </div>
 
   <!-- LOGIN LOGIC (UNCHANGED) -->
   <script type="module" src="./scripts/login.js"></script>
 
-  <!-- EYE TOGGLE (UI ONLY) -->
+  <!-- EYE TOGGLE + MESSAGE VISIBILITY -->
   <script>
     const toggle = document.getElementById("togglePassword");
     const password = document.getElementById("password");
@@ -203,7 +215,6 @@
         password.type === "password" ? "text" : "password";
     });
 
-    // Show message only when text exists
     const msg = document.getElementById("message");
     const observer = new MutationObserver(() => {
       msg.style.display = msg.textContent.trim() ? "block" : "none";
