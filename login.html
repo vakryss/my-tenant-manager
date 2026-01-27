@@ -98,9 +98,6 @@
       user-select: none;
     }
 
-    /* =========================
-       BUTTON & ANIMATION
-    ========================= */
     button {
       width: 100%;
       padding: 12px;
@@ -130,7 +127,6 @@
       display: inline-block;
     }
 
-    /* ROTATION ONLY AFTER CLICK */
     .loading .btn-text span {
       animation: rotateChar 1.4s infinite;
     }
@@ -148,7 +144,6 @@
       100% { transform: rotate(0deg); }
     }
 
-    /* DOTS – ONLY ACTIVE WHEN LOADING */
     .dots::after {
       content: "";
     }
@@ -224,13 +219,24 @@
   <!-- EXISTING LOGIN LOGIC -->
   <script type="module" src="./scripts/login.js"></script>
 
-  <!-- UI-ONLY ANIMATION CONTROL -->
+  <!-- UI-ONLY ANIMATION CONTROL (5s MINIMUM) -->
   <script>
     const loginBtn = document.getElementById("loginBtn");
+    let animationStartTime = null;
 
     loginBtn.addEventListener("click", () => {
+      animationStartTime = Date.now();
       loginBtn.classList.add("loading");
       loginBtn.disabled = true;
+
+      // enforce minimum 5s animation
+      setTimeout(() => {
+        // if still on this page, allow interaction again
+        if (document.body.contains(loginBtn)) {
+          loginBtn.classList.remove("loading");
+          loginBtn.disabled = false;
+        }
+      }, 5000);
     });
 
     const toggle = document.getElementById("togglePassword");
