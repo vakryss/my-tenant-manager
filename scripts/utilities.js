@@ -12,6 +12,13 @@ const utilityTableBody = document.getElementById("utilityTableBody");
 const logoutBtn = document.getElementById("logoutBtn");
 
 /* =========================
+   HELPERS
+========================= */
+function todayISO() {
+  return new Date().toISOString().split("T")[0];
+}
+
+/* =========================
    LOAD TENANTS
 ========================= */
 async function loadTenants() {
@@ -20,13 +27,12 @@ async function loadTenants() {
     .select("id, tenant_name")
     .order("tenant_name");
 
+  tenantSelect.innerHTML = `<option value="">N/A</option>`;
+
   if (error) {
     console.error(error.message);
-    tenantSelect.innerHTML = `<option value="">N/A</option>`;
     return;
   }
-
-  tenantSelect.innerHTML = `<option value="">N/A</option>`;
 
   data.forEach(t => {
     const option = document.createElement("option");
@@ -50,16 +56,11 @@ async function loadUtilities() {
     `)
     .order("charge_date", { ascending: false });
 
-  if (error) {
-    console.error(error.message);
-    return;
-  }
-
   utilityTableBody.innerHTML = "";
 
-  if (!data || data.length === 0) {
+  if (error || !data || data.length === 0) {
     utilityTableBody.innerHTML =
-      "<tr><td colspan='4'>N/A</td></tr>";
+      "<tr><td colspan='4'>No records yet</td></tr>";
     return;
   }
 
@@ -84,7 +85,10 @@ async function loadUtilities() {
    SAVE UTILITY + LEDGER
 ========================= */
 async function saveUtility() {
+  if (saveUtilityBtn.disabled) return;
+
   utilityMessage.textContent = "Saving utility charge...";
+  saveUtilityBtn.disabled = true;
 
   const tenantId = tenantSelect.value;
   const utilityType = utilityTypeSelect.value;
@@ -92,14 +96,28 @@ async function saveUtility() {
   const amount = parseFloat(amountInput.value);
   const notes = notesInput.value.trim();
 
-  if (!tenantId || !utilityType || !chargeDate || isNaN(amount)) {
+  if (!tenantId || !utilityType || !chargeDate) {
     utilityMessage.textContent = "All required fields must be filled.";
+    saveUtilityBtn.disabled = false;
+    return;
+  }
+
+  if (isNaN(amount) || amount <= 0) {
+    utilityMessage.textContent = "Amount must be greater than zero.";
+    saveUtilityBtn.disabled = false;
+    return;
+  }
+
+  if (chargeDate > todayISO()) {
+    utilityMessage.textContent = "Charge date cannot be in the future.";
+    saveUtilityBtn.disabled = false;
     return;
   }
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     utilityMessage.textContent = "Not authenticated.";
+    saveUtilityBtn.disabled = false;
     return;
   }
 
@@ -116,6 +134,7 @@ async function saveUtility() {
 
   if (utilityError) {
     utilityMessage.textContent = utilityError.message;
+    saveUtilityBtn.disabled = false;
     return;
   }
 
@@ -133,6 +152,7 @@ async function saveUtility() {
 
   if (ledgerError) {
     utilityMessage.textContent = ledgerError.message;
+    saveUtilityBtn.disabled = false;
     return;
   }
 
@@ -140,6 +160,7 @@ async function saveUtility() {
 
   amountInput.value = "";
   notesInput.value = "";
+  saveUtilityBtn.disabled = false;
 
   await loadUtilities();
 }
@@ -153,5 +174,6 @@ logoutBtn.addEventListener("click", logout);
 /* =========================
    INIT
 ========================= */
+chargeDateInput.max = todayISO();
 loadTenants();
 loadUtilities();
