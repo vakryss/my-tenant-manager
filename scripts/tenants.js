@@ -216,6 +216,8 @@ if (openAddBtn && addModal) {
   function updateStatusFields() {
     const status = $("editTenantStatus").value;
 
+    $("editTenantStatus").dataset.status = status;
+    
     movedOutWrap.style.display = status === "Moved Out" ? "block" : "none";
     lastSeenWrap.style.display = status === "Left Without Notice" ? "block" : "none";
   }
