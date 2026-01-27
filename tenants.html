@@ -37,7 +37,7 @@
       overflow-x: hidden;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR — DO NOT TOUCH */
     .sidebar {
       background: #AA7E63;
       color: #fff;
@@ -64,11 +64,6 @@
       text-decoration: none;
       font-size: 0.9rem;
       white-space: nowrap;
-    }
-
-    .nav-link:hover {
-      background: #F4D1B8;
-      color: #000;
     }
 
     .nav-link.active {
@@ -125,7 +120,6 @@
       margin: 0 auto;
     }
 
-    /* HEADER ROW */
     .page-header {
       display: flex;
       justify-content: space-between;
@@ -164,6 +158,22 @@
       margin-top: 4px;
     }
 
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .checkbox-group label {
+      font-weight: 500;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -174,6 +184,7 @@
       padding: 8px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
+      vertical-align: top;
     }
 
     th {
@@ -249,7 +260,6 @@
   <main class="content">
     <div class="container">
 
-      <!-- HEADER -->
       <div class="page-header">
         <h1>Tenants</h1>
         <button id="toggleAddTenant" class="primary">+ Add Tenant</button>
@@ -263,17 +273,18 @@
               <th>Tenant Name</th>
               <th>Monthly Rent</th>
               <th>Due Day</th>
+              <th>Utilities Billed</th>
             </tr>
           </thead>
           <tbody id="tenantTableBody">
             <tr>
-              <td colspan="3" class="muted">No tenants yet</td>
+              <td colspan="4" class="muted">No tenants yet</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- ADD TENANT (HIDDEN BY DEFAULT) -->
+      <!-- ADD TENANT -->
       <div class="card hidden" id="addTenantCard">
         <h2>Add Tenant</h2>
 
@@ -285,6 +296,13 @@
 
         <label for="rentDueDay">Rent Due Day (1–31)</label>
         <input id="rentDueDay" type="number" min="1" max="31">
+
+        <label>Utilities to Bill</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="Electric"> Electric</label>
+          <label><input type="checkbox" value="Water"> Water</label>
+          <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
+        </div>
 
         <button id="addTenantBtn" class="primary">Save Tenant</button>
         <div id="tenantMessage" class="muted">N/A</div>
@@ -302,14 +320,12 @@
   logoutBtn.onclick = logout;
   mobileLogout.onclick = logout;
 
-  const toggleBtn = document.getElementById("toggleAddTenant");
-  const addCard = document.getElementById("addTenantCard");
-
-  toggleBtn.onclick = () => {
-    addCard.classList.toggle("hidden");
-    toggleBtn.textContent = addCard.classList.contains("hidden")
-      ? "+ Add Tenant"
-      : "× Close";
+  toggleAddTenant.onclick = () => {
+    addTenantCard.classList.toggle("hidden");
+    toggleAddTenant.textContent =
+      addTenantCard.classList.contains("hidden")
+        ? "+ Add Tenant"
+        : "× Close";
   };
 </script>
 
