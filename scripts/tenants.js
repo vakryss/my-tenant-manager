@@ -14,11 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
      CORE ELEMENTS
   ========================= */
   const tenantTableBody = $("tenantTableBody");
-
   const openAddBtn = $("openAddModal");
   const addModal = $("addModal");
   const editModal = $("editModal");
-
   const submitAddBtn = $("submitAdd");
   const submitEditBtn = $("submitEdit");
 
@@ -36,8 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function getChecked(containerId) {
     const container = $(containerId);
     if (!container) return [];
-    return Array.from(container.querySelectorAll("input:checked"))
-      .map(cb => cb.value);
+
+    return Array.from(
+      container.querySelectorAll("input:checked")
+    ).map(cb => cb.value);
   }
 
   function openModal(modal) {
@@ -66,22 +66,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!data || data.length === 0) {
       tenantTableBody.innerHTML =
-        `<tr><td colspan="5">No tenants yet</td></tr>`;
+        <tr><td colspan="5">No tenants yet</td></tr>;
       return;
     }
 
     data.forEach(t => {
       const tr = document.createElement("tr");
 
-      tr.innerHTML = `
+      tr.innerHTML =
         <td>${t.tenant_name}</td>
         <td>₱${Number(t.monthly_rent).toFixed(2)}</td>
         <td>${t.rent_due_day}</td>
-        <td>${(t.utilities && t.utilities.length) ? t.utilities.join(", ") : "—"}</td>
+        <td>${(t.utilities && t.utilities.length)
+          ? t.utilities.join(", ")
+          : "—"}</td>
         <td>
           <button class="secondary">Edit</button>
-        </td>
-      `;
+        </td>;
 
       tr.querySelector("button").addEventListener("click", () => {
         openEditModal(t);
@@ -103,21 +104,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (submitAddBtn) {
     submitAddBtn.addEventListener("click", async () => {
       if (!confirm("Add this tenant?")) return;
-  if (!confirm("Add this tenant?")) return;
 
-  // Disable button
-  submitAddBtn.disabled = true;
-  const originalText = submitAddBtn.textContent;
-  submitAddBtn.textContent = "Saving… Please wait...";
+      // Disable button
+      submitAddBtn.disabled = true;
+      const originalText = submitAddBtn.textContent;
+      submitAddBtn.textContent = "Saving… Please wait...";
 
-const {
-  data: { user }
-} = await supabase.auth.getUser();
-
-if (!user) {
-  alert("Not authenticated");
-  return;
-}
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert("Not authenticated");
+        return;
+      }
 
       const payload = {
         user_id: user.id,
@@ -127,7 +124,9 @@ if (!user) {
         utilities: getChecked("addUtilities")
       };
 
-      const { error } = await supabase.from("tenants").insert(payload);
+      const { error } = await supabase
+        .from("tenants")
+        .insert(payload);
 
       if (error) {
         alert(error.message);
@@ -191,3 +190,4 @@ if (!user) {
   ========================= */
   loadTenants();
 
+});
