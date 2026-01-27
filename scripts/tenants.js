@@ -1,138 +1,84 @@
 import { supabase } from "./supabase.js";
-import { logout } from "./session.js";
 
-/* =========================
-   ELEMENTS
-========================= */
-const tenantNameInput = document.getElementById("tenantName");
-const monthlyRentInput = document.getElementById("monthlyRent");
-const rentDueDayInput = document.getElementById("rentDueDay");
-const addTenantBtn = document.getElementById("addTenantBtn");
-const tenantMessage = document.getElementById("tenantMessage");
-const tenantTableBody = document.getElementById("tenantTableBody");
-const logoutBtn = document.getElementById("logoutBtn");
+/* ELEMENTS */
+const tableBody = document.getElementById("tenantTableBody");
+const addModal = document.getElementById("addModal");
+const editModal = document.getElementById("editModal");
 
-/* =========================
-   UTILITIES HELPERS
-========================= */
-function getSelectedUtilities() {
-  return Array.from(
-    document.querySelectorAll(".checkbox-group input:checked")
-  ).map(cb => cb.value);
-}
+/* UTILITIES */
+const getChecked = group =>
+  Array.from(group.querySelectorAll("input:checked")).map(c => c.value);
 
-function clearUtilitiesSelection() {
-  document
-    .querySelectorAll(".checkbox-group input")
-    .forEach(cb => (cb.checked = false));
-}
-
-/* =========================
-   LOAD TENANTS
-========================= */
+/* LOAD */
 async function loadTenants() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return;
-
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("tenants")
-    .select("tenant_name, monthly_rent, rent_due_day, utilities")
-    .order("created_at", { ascending: true });
+    .select("id, tenant_name, monthly_rent, rent_due_day, utilities")
+    .order("created_at");
 
-  if (error) {
-    console.error("Load tenants error:", error.message);
-    return;
-  }
+  tableBody.innerHTML = "";
 
-  tenantTableBody.innerHTML = "";
-
-  if (!data || data.length === 0) {
-    tenantTableBody.innerHTML = `
-      <tr>
-        <td colspan="4">N/A</td>
-      </tr>
+  data.forEach(t => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${t.tenant_name}</td>
+      <td>₱${t.monthly_rent}</td>
+      <td>${t.rent_due_day}</td>
+      <td>${(t.utilities || []).join(", ")}</td>
+      <td><button class="secondary" onclick="openEditModal(${JSON.stringify(t).replace(/"/g,"'")})">Edit</button></td>
     `;
-    return;
-  }
-
-  data.forEach(tenant => {
-    const utilitiesText =
-      Array.isArray(tenant.utilities) && tenant.utilities.length
-        ? tenant.utilities.join(", ")
-        : "—";
-
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${tenant.tenant_name}</td>
-      <td>₱${Number(tenant.monthly_rent).toFixed(2)}</td>
-      <td>${tenant.rent_due_day}</td>
-      <td>${utilitiesText}</td>
-    `;
-
-    tenantTableBody.appendChild(row);
+    tableBody.appendChild(tr);
   });
 }
 
-/* =========================
-   ADD TENANT
-========================= */
-async function addTenant() {
-  tenantMessage.textContent = "Saving...";
+/* ADD */
+document.getElementById("openAddModal").onclick = () => addModal.style.display = "flex";
+window.closeAddModal = () => addModal.style.display = "none";
 
-  const tenantName = tenantNameInput.value.trim();
-  const monthlyRent = parseFloat(monthlyRentInput.value);
-  const rentDueDay = parseInt(rentDueDayInput.value, 10);
-  const utilities = getSelectedUtilities();
+document.getElementById("submitAdd").onclick = async () => {
+  if (!confirm("Add this tenant?")) return;
 
-  if (!tenantName || isNaN(monthlyRent) || isNaN(rentDueDay)) {
-    tenantMessage.textContent = "All fields are required.";
-    return;
-  }
+  await supabase.from("tenants").insert({
+    tenant_name: addTenantName.value,
+    monthly_rent: addMonthlyRent.value,
+    rent_due_day: addRentDueDay.value,
+    utilities: getChecked(addUtilities)
+  });
 
-  if (rentDueDay < 1 || rentDueDay > 31) {
-    tenantMessage.textContent = "Rent due day must be between 1 and 31.";
-    return;
-  }
+  closeAddModal();
+  loadTenants();
+};
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    tenantMessage.textContent = "Not authenticated.";
-    return;
-  }
+/* EDIT */
+window.openEditModal = tenant => {
+  editModal.style.display = "flex";
+  editTenantId.value = tenant.id;
+  editTenantName.value = tenant.tenant_name;
+  editMonthlyRent.value = tenant.monthly_rent;
+  editRentDueDay.value = tenant.rent_due_day;
+  editUtilities.querySelectorAll("input").forEach(cb => {
+    cb.checked = tenant.utilities?.includes(cb.value);
+  });
+};
 
-  const { error } = await supabase
+window.closeEditModal = () => editModal.style.display = "none";
+
+document.getElementById("submitEdit").onclick = async () => {
+  if (!confirm("Update this tenant?")) return;
+
+  await supabase
     .from("tenants")
-    .insert({
-      user_id: user.id,
-      tenant_name: tenantName,
-      monthly_rent: monthlyRent,
-      rent_due_day: rentDueDay,
-      utilities: utilities
-    });
+    .update({
+      tenant_name: editTenantName.value,
+      monthly_rent: editMonthlyRent.value,
+      rent_due_day: editRentDueDay.value,
+      utilities: getChecked(editUtilities)
+    })
+    .eq("id", editTenantId.value);
 
-  if (error) {
-    tenantMessage.textContent = error.message;
-    return;
-  }
+  closeEditModal();
+  loadTenants();
+};
 
-  tenantMessage.textContent = "Tenant added successfully.";
-
-  tenantNameInput.value = "";
-  monthlyRentInput.value = "";
-  rentDueDayInput.value = "";
-  clearUtilitiesSelection();
-
-  await loadTenants();
-}
-
-/* =========================
-   EVENTS
-========================= */
-addTenantBtn.addEventListener("click", addTenant);
-logoutBtn.addEventListener("click", logout);
-
-/* =========================
-   INIT
-========================= */
+/* INIT */
 loadTenants();
