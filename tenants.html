@@ -276,5 +276,63 @@
 
 <!-- ADD + EDIT MODALS (unchanged, already working) -->
 <script type="module" src="./scripts/tenants.js"></script>
+<!-- ADD TENANT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h2>Add Tenant</h2>
+
+    <label>Tenant Name</label>
+    <input id="addTenantName" type="text">
+
+    <label>Monthly Rent</label>
+    <input id="addMonthlyRent" type="number">
+
+    <label>Rent Due Day</label>
+    <input id="addRentDueDay" type="number" min="1" max="31">
+
+    <label>Utilities</label>
+    <div class="checkbox-group" id="addUtilities">
+      <label><input type="checkbox" value="Electric"> Electric</label>
+      <label><input type="checkbox" value="Water"> Water</label>
+      <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+      <button class="primary" id="submitAdd">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT TENANT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h2>Edit Tenant</h2>
+
+    <input type="hidden" id="editTenantId">
+
+    <label>Tenant Name</label>
+    <input id="editTenantName" type="text">
+
+    <label>Monthly Rent</label>
+    <input id="editMonthlyRent" type="number">
+
+    <label>Rent Due Day</label>
+    <input id="editRentDueDay" type="number" min="1" max="31">
+
+    <label>Utilities</label>
+    <div class="checkbox-group" id="editUtilities">
+      <label><input type="checkbox" value="Electric"> Electric</label>
+      <label><input type="checkbox" value="Water"> Water</label>
+      <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
+      <button class="primary" id="submitEdit">Update</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
