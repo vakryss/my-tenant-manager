@@ -48,9 +48,9 @@
       flex-direction: column;
       justify-content: space-between;
 
-      /* 🔑 KEY FIX */
-      width: max-content;
+      width: max-content;     /* KEY FIX */
       min-width: 0;
+      flex-shrink: 0;
     }
 
     .nav-group {
@@ -60,14 +60,14 @@
     }
 
     .nav-link {
-      display: block;              /* full-width inside sidebar */
+      display: block;
       padding: 6px 10px;
       line-height: 1.2;
       border-radius: 6px;
       color: #fff;
       text-decoration: none;
       font-size: 0.9rem;
-      white-space: nowrap;         /* prevents wrapping */
+      white-space: nowrap;
     }
 
     .nav-link:hover {
@@ -118,7 +118,6 @@
       flex-direction: column;
       justify-content: space-between;
 
-      /* same behavior as desktop */
       width: max-content;
       max-width: 90vw;
     }
@@ -136,20 +135,72 @@
       margin: 0 auto;
     }
 
+    h1 { font-size: 1.4rem; margin-bottom: 6px; }
+    h2 { font-size: 1.05rem; margin-bottom: 10px; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .summary {
+      font-size: 0.9rem;
+    }
+
+    .summary strong {
+      font-size: 1.2rem;
+      display: block;
+      margin-top: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .muted {
+      font-size: 0.85rem;
+      color: #777;
+    }
+
     @media (min-width: 768px) {
       .mobile-header { display: none; }
       .sidebar { display: flex; }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
 
 <body>
 
+<!-- MOBILE HEADER -->
 <div class="mobile-header">
   <strong>My Tenant Manager</strong>
   <button class="menu-btn" id="openMenu">☰ Menu</button>
 </div>
 
+<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <div class="mobile-menu-content">
     <div class="nav-group">
@@ -171,6 +222,7 @@
 
 <div class="app">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="nav-group">
       <a class="nav-link active" href="/index.html">Dashboard</a>
@@ -188,20 +240,139 @@
     </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="content">
     <div class="container">
-      <!-- Dashboard content unchanged -->
+
+      <h1>Dashboard</h1>
+
+      <!-- SUMMARY CARDS -->
+      <div class="card grid-3">
+        <div class="summary">
+          Utilities This Month
+          <strong id="utilTotal">₱0.00</strong>
+        </div>
+        <div class="summary">
+          Rent This Month
+          <strong id="rentTotal">₱0.00</strong>
+        </div>
+        <div class="summary">
+          Payments Received
+          <strong id="paymentTotal">₱0.00</strong>
+        </div>
+      </div>
+
+      <!-- NEEDS ATTENTION -->
+      <div class="card">
+        <h2>Needs Attention</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Issue</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="attentionTable">
+            <tr><td colspan="3" class="muted">Checking…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RECENT ACTIVITY -->
+      <div class="card">
+        <h2>Recent Activity</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Tenant</th>
+              <th>Action</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="activityTable">
+            <tr><td colspan="4" class="muted">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </main>
 </div>
 
 <script type="module">
+  import { supabase } from "./scripts/supabase.js";
   import { logout } from "./scripts/session.js";
 
   openMenu.onclick = () => mobileMenu.style.display = "block";
   mobileMenu.onclick = () => mobileMenu.style.display = "none";
   logoutBtn.onclick = logout;
   mobileLogout.onclick = logout;
+
+  const monthStart = new Date();
+  monthStart.setDate(1);
+
+  async function loadDashboard() {
+    const { data } = await supabase
+      .from("ledger_entries")
+      .select("entry_date, entry_type, category, amount, tenants(tenant_name)")
+      .order("entry_date", { ascending: false });
+
+    if (!data) return;
+
+    let util = 0, rent = 0, pay = 0;
+    const balances = {};
+
+    data.forEach(r => {
+      const d = new Date(r.entry_date);
+
+      if (d >= monthStart) {
+        if (["Electric","Water","Wi-Fi"].includes(r.category))
+          util += Math.abs(r.amount);
+        if (r.category === "Rent")
+          rent += Math.abs(r.amount);
+        if (r.entry_type === "payment")
+          pay += r.amount;
+      }
+
+      if (r.tenants?.tenant_name) {
+        balances[r.tenants.tenant_name] =
+          (balances[r.tenants.tenant_name] || 0) + r.amount;
+      }
+    });
+
+    utilTotal.textContent = `₱${util.toFixed(2)}`;
+    rentTotal.textContent = `₱${rent.toFixed(2)}`;
+    paymentTotal.textContent = `₱${pay.toFixed(2)}`;
+
+    attentionTable.innerHTML = "";
+    Object.entries(balances)
+      .filter(([_, v]) => v < 0)
+      .slice(0, 5)
+      .forEach(([t, v]) => {
+        attentionTable.innerHTML +=
+          `<tr><td>${t}</td><td>Overdue balance</td><td>₱${Math.abs(v).toFixed(2)}</td></tr>`;
+      });
+
+    if (!attentionTable.children.length) {
+      attentionTable.innerHTML =
+        `<tr><td colspan="3">No outstanding balances 🎉</td></tr>`;
+    }
+
+    activityTable.innerHTML = "";
+    data.slice(0, 5).forEach(r => {
+      activityTable.innerHTML +=
+        `<tr>
+          <td>${r.entry_date}</td>
+          <td>${r.tenants?.tenant_name || "N/A"}</td>
+          <td>${r.entry_type}</td>
+          <td>₱${Math.abs(r.amount).toFixed(2)}</td>
+        </tr>`;
+    });
+  }
+
+  loadDashboard();
 </script>
 
 </body>
