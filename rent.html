@@ -3,11 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <title>Rent – My Tenant Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- =================================
+       HARD BLOCK RENDER (NO FLASH)
+  ================================= -->
   <style>
-    html { visibility: hidden; }
+    html {
+      visibility: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 6px;
+    }
+
+    h1, h2, p {
+      margin-top: 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    thead {
+      background: #efefef;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .button-row button {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    /* =========================
+       MOBILE TABLE STACK
+    ========================= */
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 8px;
+        background: #fafafa;
+      }
+
+      td {
+        border: none;
+        padding: 4px 0;
+      }
+
+      td::before {
+        font-weight: bold;
+        display: block;
+      }
+
+      td:nth-child(1)::before { content: "Tenant"; }
+      td:nth-child(2)::before { content: "Amount"; }
+      td:nth-child(3)::before { content: "Due Date"; }
+      td:nth-child(4)::before { content: "Month"; }
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 24px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
   </style>
 
+  <!-- =================================
+       AUTH GATE
+  ================================= -->
   <script type="module">
     import { supabase } from "./scripts/supabase.js";
     const { data: { session } } = await supabase.auth.getSession();
@@ -21,37 +145,65 @@
 
 <body>
 
-<h1>Rent Charges</h1>
-<p>Bronze Tier</p>
+<div class="container">
 
-<hr>
+  <h1>Rent Charges</h1>
+  <p>Bronze Tier</p>
 
-<button id="generateRentBtn">Generate Rent for Current Month</button>
-<p id="rentMessage">N/A</p>
+  <hr>
 
-<hr>
+  <!-- =================================
+       GENERATE RENT
+  ================================= -->
+  <div class="section">
+    <button id="generateRentBtn">
+      Generate Rent for Current Month
+    </button>
+    <p id="rentMessage">N/A</p>
+  </div>
 
-<h2>Current Month Charges</h2>
+  <hr>
 
-<table border="1" cellpadding="6">
-  <thead>
-    <tr>
-      <th>Tenant</th>
-      <th>Amount</th>
-      <th>Due Date</th>
-      <th>Month</th>
-    </tr>
-  </thead>
-  <tbody id="rentTableBody">
-    <tr><td colspan="4">N/A</td></tr>
-  </tbody>
-</table>
+  <!-- =================================
+       CURRENT MONTH CHARGES
+  ================================= -->
+  <div class="section">
+    <h2>Current Month Charges</h2>
 
-<hr>
+    <table>
+      <thead>
+        <tr>
+          <th>Tenant</th>
+          <th>Amount</th>
+          <th>Due Date</th>
+          <th>Month</th>
+        </tr>
+      </thead>
+      <tbody id="rentTableBody">
+        <tr>
+          <td colspan="4">No records yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<button onclick="window.location.href='/index.html'">Back to Dashboard</button>
-<button id="logoutBtn">Logout</button>
+  <hr>
 
+  <!-- =================================
+       NAVIGATION
+  ================================= -->
+  <div class="button-row">
+    <button onclick="window.location.href='/ledger.html'">Ledger</button>
+    <button onclick="window.location.href='/tenants.html'">Tenants</button>
+    <button onclick="window.location.href='/index.html'">Dashboard</button>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+</div>
+
+<!-- =================================
+     PAGE LOGIC
+================================= -->
 <script type="module" src="./scripts/rent.js"></script>
 
 </body>
