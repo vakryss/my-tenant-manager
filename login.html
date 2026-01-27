@@ -12,14 +12,7 @@
       margin: 0;
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-      background: linear-gradient(
-        135deg,
-        #8f6248,
-        #AA7E63,
-        #cfa98a
-      );
-
+      background: linear-gradient(135deg, #8f6248, #AA7E63, #cfa98a);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -35,20 +28,21 @@
       max-width: 380px;
       padding: 28px 24px;
       border-radius: 16px;
-
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
 
+    /* =========================
+       HEADINGS (WITH GLOW)
+    ========================= */
     h1 {
       font-size: 1.6rem;
       margin-bottom: 6px;
       text-align: center;
       color: #000;
-      text-shadow: 0 0 8px rgba(255,255,255,0.8);
+      text-shadow: 0 0 8px rgba(255,255,255,0.85);
     }
 
     .subtitle {
@@ -56,11 +50,11 @@
       margin-bottom: 26px;
       text-align: center;
       color: #000;
-      text-shadow: 0 0 6px rgba(255,255,255,0.8);
+      text-shadow: 0 0 6px rgba(255,255,255,0.85);
     }
 
     /* =========================
-       FLOATING INPUTS
+       FLOATING INPUTS (NO GLOW)
     ========================= */
     .field {
       position: relative;
@@ -89,9 +83,8 @@
       transform: translateY(-50%);
       font-size: 0.9rem;
       pointer-events: none;
-      color: #000;
+      color: #000; /* NO GLOW */
       transition: all 0.25s ease;
-      text-shadow: 0 0 6px rgba(255,255,255,0.9);
     }
 
     .field input:focus + label,
@@ -125,13 +118,11 @@
       padding: 12px;
       border-radius: 10px;
       border: none;
-
       background: #fff;
       color: #8f6248;
       font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-
       cursor: pointer;
       margin-top: 10px;
     }
@@ -141,31 +132,33 @@
     }
 
     /* =========================
-       MESSAGE (HIDDEN BY DEFAULT)
+       MESSAGE (HIDDEN)
     ========================= */
     .message {
       margin-top: 14px;
       font-size: 0.85rem;
       display: none;
       color: #000;
-      text-shadow: 0 0 6px rgba(255,255,255,0.9);
     }
 
     /* =========================
-       FOOTER
+       FOOTER (NO GLOW, ITALIC)
     ========================= */
     .footer {
-      margin-top: 22px;
-      font-size: 0.75rem;
+      margin-top: 28px; /* pushed lower */
+      font-size: 0.85rem;
       text-align: center;
-      color: #000;
-      text-shadow: 0 0 6px rgba(255,255,255,0.9);
-      line-height: 1.4;
+      color: #fff;
+      font-style: italic;
+      -webkit-text-stroke: 0.8px #000;
+      line-height: 1.5;
     }
 
     .footer a {
-      color: #000;
+      color: #fff;
+      -webkit-text-stroke: 0.8px #000;
       text-decoration: underline;
+      font-weight: 600;
     }
   </style>
 </head>
