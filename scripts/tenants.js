@@ -230,6 +230,50 @@ if (openAddBtn && addModal) {
     loadTenants();
   };
 
+  // =========================
+// ADD TENANT - SAVE HANDLER
+// =========================
+submitAddBtn.onclick = async () => {
+  if (!confirm("Add this tenant?")) return;
+
+  submitAddBtn.disabled = true;
+  submitAddBtn.textContent = "Saving… Please wait...";
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Not authenticated");
+    submitAddBtn.disabled = false;
+    submitAddBtn.textContent = "Save";
+    return;
+  }
+
+  const payload = {
+    user_id: user.id,
+    tenant_name: $("addTenantName").value.trim(),
+    status: "Active",
+    monthly_rent: Number($("addMonthlyRent").value),
+    rent_due_day: Number($("addRentDueDay").value),
+    utilities: Array.from(
+      document.querySelectorAll("#addUtilities input:checked")
+    ).map(cb => cb.value)
+  };
+
+  const { error } = await supabase
+    .from("tenants")
+    .insert(payload);
+
+  submitAddBtn.disabled = false;
+  submitAddBtn.textContent = "Save";
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  closeModal(addModal);
+  loadTenants();
+};
+
   statusFilter.onchange = loadTenants;
   loadTenants();
 });
