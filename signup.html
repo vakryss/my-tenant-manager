@@ -27,7 +27,6 @@
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
 
@@ -47,6 +46,7 @@
       text-shadow: 0 0 6px rgba(255,255,255,0.85);
     }
 
+    /* FLOATING FIELDS */
     .field {
       position: relative;
       margin-bottom: 20px;
@@ -55,7 +55,7 @@
     .field input,
     .field select {
       width: 100%;
-      padding: 14px 12px;
+      padding: 14px 44px 14px 12px;
       font-size: 0.95rem;
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.6);
@@ -64,20 +64,48 @@
       outline: none;
     }
 
-    .field-label {
-      font-size: 0.8rem;
-      margin-bottom: 6px;
-      font-weight: 600;
+    .field input::placeholder {
+      color: transparent;
+    }
+
+    .field label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      pointer-events: none;
+      color: #000;
+      transition: all 0.25s ease;
+    }
+
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label {
+      top: -8px;
+      font-size: 0.75rem;
+      background: rgba(143,98,72,0.85);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
     }
 
     .checkbox-row {
       font-size: 0.85rem;
-      margin-bottom: 12px;
-      cursor: pointer;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .checkbox-row input {
-      margin-right: 6px;
       cursor: pointer;
     }
 
@@ -92,18 +120,12 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       cursor: pointer;
-      margin-top: 14px;
-      position: relative;
+      margin-top: 16px;
     }
 
     button:disabled {
       opacity: 0.85;
       cursor: default;
-    }
-
-    .btn-text {
-      display: inline-flex;
-      gap: 1px;
     }
 
     .btn-text span {
@@ -114,31 +136,10 @@
       animation: rotateChar 1.4s infinite;
     }
 
-    .loading .btn-text span:nth-child(1){animation-delay:0s}
-    .loading .btn-text span:nth-child(2){animation-delay:.2s}
-    .loading .btn-text span:nth-child(3){animation-delay:.4s}
-    .loading .btn-text span:nth-child(4){animation-delay:.6s}
-    .loading .btn-text span:nth-child(5){animation-delay:.8s}
-    .loading .btn-text span:nth-child(6){animation-delay:1s}
-
     @keyframes rotateChar {
       0% { transform: rotate(0deg); }
       25% { transform: rotate(12deg); }
       50% { transform: rotate(0deg); }
-      100% { transform: rotate(0deg); }
-    }
-
-    .dots::after { content: ""; }
-
-    .loading .dots::after {
-      animation: dots 1.2s infinite steps(4);
-    }
-
-    @keyframes dots {
-      0% { content:""; }
-      25% { content:"."; }
-      50% { content:".."; }
-      75% { content:"..."; }
     }
 
     .footer {
@@ -156,13 +157,13 @@
       background: rgba(0,0,0,0.6);
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 999;
     }
 
     .modal-content {
       background: #fff;
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       max-height: 80vh;
       padding: 20px;
       border-radius: 12px;
@@ -174,10 +175,7 @@
       overflow-y: auto;
       font-size: 0.85rem;
       margin-bottom: 12px;
-    }
-
-    .modal-actions button {
-      margin-top: 8px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -188,68 +186,45 @@
   <h1>Welcome</h1>
   <div class="subtitle">Create your My Tenant Manager account</div>
 
-  <!-- EMAIL -->
   <div class="field">
     <input id="email" type="email" placeholder="Email">
+    <label>Email</label>
   </div>
 
-  <!-- PASSWORD -->
   <div class="field">
     <input id="password" type="password" placeholder="Password">
+    <label>Password</label>
+    <span class="eye" id="togglePassword">👁</span>
   </div>
 
-  <!-- COUNTRY -->
   <div class="field">
-    <div class="field-label">Country</div>
     <select id="country">
       <option value="">Select country</option>
-      <option>Afghanistan</option>
-      <option>Australia</option>
-      <option>Brazil</option>
-      <option>Canada</option>
-      <option>China</option>
-      <option>France</option>
-      <option>Germany</option>
-      <option>India</option>
-      <option>Indonesia</option>
-      <option>Japan</option>
-      <option>Malaysia</option>
-      <option>New Zealand</option>
       <option>Philippines</option>
-      <option>Singapore</option>
-      <option>South Korea</option>
-      <option>Spain</option>
-      <option>Thailand</option>
-      <option>United Arab Emirates</option>
-      <option>United Kingdom</option>
-      <option>United States</option>
-      <!-- Can be expanded later -->
     </select>
   </div>
 
-  <!-- TERMS -->
-  <div class="checkbox-row" id="termsRow">
+  <div class="checkbox-row">
     <input type="checkbox" id="terms" disabled>
-    I accept the Terms and Conditions
+    <span>I accept the Terms and Conditions</span>
   </div>
 
-  <!-- PRIVACY -->
-  <div class="checkbox-row" id="privacyRow">
+  <div class="checkbox-row">
     <input type="checkbox" id="privacy" disabled>
-    I accept the Data Privacy Policy
+    <span>I accept the Data Privacy Policy</span>
   </div>
 
-  <!-- CREATE ACCOUNT -->
   <button id="signupBtn">
     <span class="btn-text">
       <span>C</span><span>R</span><span>E</span><span>A</span><span>T</span><span>E</span>
+      <span>&nbsp;</span>
+      <span>A</span><span>C</span><span>C</span><span>O</span><span>U</span><span>N</span><span>T</span>
     </span>
-    <span class="dots"></span>
   </button>
 
   <div class="footer">
-    Already have an account?
-    <a href="/login.html"><b>Login</b></a>
+    My Tenant Manager © 2026<br>
+    Created by Kryss Geo Cantago
   </div>
 </div>
 
@@ -257,14 +232,186 @@
 <div class="modal" id="termsModal">
   <div class="modal-content">
     <div class="modal-body" id="termsBody">
-      <p><b>Terms and Conditions</b></p>
-      <p>(Full terms text here – scroll required)</p>
-      <p>End of Terms.</p>
+      <h3>Terms and Conditions</h3>
+      <p>TERMS AND CONDITIONS
+
+My Tenant Manager – Bronze Tier
+
+Last Updated: 2026
+Version: 1.0
+
+1. Introduction
+
+Welcome to My Tenant Manager (“the Application”, “the Service”, “we”, “us”, or “our”).
+My Tenant Manager is a web-based rental management application designed to help landlords and property managers track tenants, rent charges, utility charges, payments, and ledger balances.
+
+By creating an account, accessing, or using this Application, you (“the User”, “you”, or “your”) agree to be bound by these Terms and Conditions. If you do not agree to these Terms, you must not create an account or use the Service.
+
+2. Scope of Service (Bronze Tier)
+
+The Bronze Tier provides manual and semi-automated tools for:
+
+Tenant record management
+
+Rent charge tracking
+
+Utility charge tracking (manual entry)
+
+Payment recording
+
+General and tenant-specific ledger views
+
+Balance calculation and history display
+
+The Bronze Tier does not include advanced analytics, automation beyond basic scheduled logic, billing services, accounting certification, tax reporting, or legal compliance services.
+
+3. No Legal, Accounting, or Financial Advice
+
+My Tenant Manager is provided for informational and organizational purposes only.
+
+We do not provide legal advice.
+
+We do not provide accounting or tax advice.
+
+We do not guarantee compliance with local landlord-tenant laws.
+
+You are solely responsible for ensuring that your use of the Application complies with all applicable laws, regulations, and contractual obligations in your jurisdiction.
+
+4. User Responsibilities
+
+By using the Service, you agree that:
+
+All data you enter (tenant names, amounts, dates, notes) is accurate to the best of your knowledge.
+
+You are responsible for reviewing entries before saving them.
+
+You understand that financial data once recorded may affect balances and reports.
+
+You will not misuse the Service for fraudulent, misleading, or unlawful purposes.
+
+You acknowledge that incorrect data entry may result in incorrect balances or reports.
+
+5. Data Accuracy and Limitations
+
+While the Application performs calculations based on the data you provide:
+
+We do not guarantee the accuracy of totals if incorrect data is entered.
+
+We do not guarantee that ledger balances reflect actual legal obligations.
+
+You are responsible for verifying all financial records independently.
+
+The Application does not replace professional bookkeeping systems unless you independently verify its suitability.
+
+6. Tenant Data and Consent
+
+You are solely responsible for:
+
+Ensuring you have the right to store tenant information.
+
+Informing tenants if required by law.
+
+Obtaining consent where applicable.
+
+We are not responsible for disputes arising between you and your tenants.
+
+7. Account Security
+
+You are responsible for maintaining the confidentiality of your login credentials.
+
+You agree to:
+
+Use a secure password.
+
+Notify us immediately if you suspect unauthorized access.
+
+Accept responsibility for all activity under your account.
+
+We are not liable for losses resulting from unauthorized access caused by your failure to secure your account.
+
+8. Availability and Service Interruptions
+
+We strive to keep the Service available but do not guarantee uninterrupted access.
+
+The Service may be temporarily unavailable due to:
+
+Maintenance
+
+Updates
+
+Hosting provider issues
+
+Network outages
+
+We are not liable for losses caused by service interruptions.
+
+9. Data Storage and Backups
+
+Data is stored using third-party infrastructure providers.
+
+We do not guarantee automatic backups on all plans.
+
+You are responsible for exporting or backing up your data as needed.
+
+Loss of data due to external factors is not our responsibility to the fullest extent permitted by law.
+
+10. Acceptable Use
+
+You agree not to:
+
+Reverse engineer or attempt to extract source code.
+
+Abuse system resources.
+
+Upload malicious content.
+
+Attempt to access other users’ data.
+
+Violation may result in account suspension or termination.
+
+11. Termination
+
+We reserve the right to suspend or terminate accounts that violate these Terms.
+
+You may stop using the Service at any time.
+
+Upon termination:
+
+Your access may be revoked.
+
+Data may be deleted according to retention policies.
+
+12. Limitation of Liability
+
+To the maximum extent permitted by law:
+
+The Service is provided “as is”.
+
+We are not liable for indirect, incidental, or consequential damages.
+
+Our total liability shall not exceed the amount you paid (if any) for the Service.
+
+13. Modifications to Terms
+
+We may update these Terms from time to time.
+
+When we do:
+
+A new version will be published.
+
+Continued use of the Service constitutes acceptance of the updated Terms.
+
+14. Governing Law
+
+These Terms are governed by the laws applicable in the jurisdiction where the Service operator is established, without regard to conflict of law principles.
+
+15. Contact
+
+If you have questions regarding these Terms, you may contact us through the official support channels provided within the Application.
+
+By clicking “I Agree”, you acknowledge that you have read, understood, and accepted these Terms and Conditions.</p>
     </div>
-    <div class="modal-actions">
-      <button id="agreeTerms" disabled>I Agree</button>
-      <button onclick="closeTerms()">Go Back</button>
-    </div>
+    <button id="agreeTerms" disabled>I Agree</button>
   </div>
 </div>
 
@@ -272,68 +419,240 @@
 <div class="modal" id="privacyModal">
   <div class="modal-content">
     <div class="modal-body" id="privacyBody">
-      <p><b>Data Privacy Policy</b></p>
-      <p>(Full privacy policy text here – scroll required)</p>
-      <p>End of Policy.</p>
+      <h3>Data Privacy Policy</h3>
+      <p>DATA PRIVACY POLICY
+
+My Tenant Manager – Bronze Tier
+
+Last Updated: 2026
+Version: 1.0
+
+1. Introduction
+
+My Tenant Manager (“the Application”, “the Service”, “we”, “us”, or “our”) is committed to protecting your privacy and personal data. This Data Privacy Policy explains how we collect, use, store, protect, and process personal information when you create an account and use the Service.
+
+By using the Application, you acknowledge that you have read and understood this Policy.
+
+2. Scope of This Policy
+
+This Policy applies to all users of the Bronze Tier of My Tenant Manager and covers:
+
+Account registration
+
+Tenant and financial data entered by users
+
+Usage of the web application
+
+Data stored using third-party infrastructure providers
+
+This Policy does not apply to third-party websites or services linked from the Application.
+
+3. Information We Collect
+3.1 Information You Provide Directly
+
+When you create an account or use the Service, we may collect:
+
+Email address
+
+Account credentials (encrypted)
+
+Country or region
+
+Tenant information you manually enter
+
+Rent amounts, utility charges, payments, and notes
+
+Ledger records and transaction history
+
+You are responsible for ensuring that the data you enter is accurate and lawful to store.
+
+3.2 Automatically Collected Information
+
+We may automatically collect:
+
+IP address
+
+Browser type and version
+
+Device type
+
+Operating system
+
+Date and time of access
+
+Pages viewed within the Application
+
+This data is used to improve system reliability, security, and performance.
+
+4. How We Use Your Information
+
+We use collected information to:
+
+Create and manage your account
+
+Authenticate access
+
+Display tenant and financial records
+
+Calculate balances and summaries
+
+Maintain system security
+
+Diagnose technical issues
+
+Improve user experience
+
+We do not sell your personal data.
+
+5. Tenant Data Responsibility
+
+Any tenant data you enter into the Application:
+
+Is provided solely by you
+
+Remains under your control
+
+Is your responsibility to manage and protect
+
+You confirm that you have the legal right to store and process tenant information, including personal or financial details, under applicable laws.
+
+6. Data Storage and Infrastructure
+
+Data is stored using third-party cloud infrastructure providers, including but not limited to:
+
+Authentication services
+
+Database services
+
+Hosting services
+
+These providers may store data in different geographic regions.
+
+We rely on industry-standard security practices but cannot guarantee absolute security.
+
+7. Data Security
+
+We implement reasonable administrative, technical, and organizational measures to protect data, including:
+
+Encrypted connections (HTTPS)
+
+Authentication controls
+
+Access restrictions
+
+However, no system is completely secure. You acknowledge that data transmission over the internet carries inherent risks.
+
+8. Data Retention
+
+We retain data for as long as:
+
+Your account remains active
+
+Required to provide the Service
+
+Required for legitimate business purposes
+
+Upon account termination, data may be deleted according to internal retention policies, unless retention is required by law.
+
+9. User Access and Control
+
+You may:
+
+Access your data through the Application
+
+Update certain account details
+
+Export or manually record data
+
+At this time, the Bronze Tier may have limited automated export or deletion features.
+
+10. Cookies and Tracking Technologies
+
+We may use cookies or similar technologies to:
+
+Maintain sessions
+
+Improve performance
+
+Enhance security
+
+You may control cookie settings through your browser.
+
+11. Third-Party Access
+
+We do not share your personal data with third parties except:
+
+Infrastructure providers necessary to operate the Service
+
+When required by law or legal process
+
+To protect the rights and safety of the Service or users
+
+12. Children’s Privacy
+
+The Service is not intended for use by individuals under the age of 18.
+
+We do not knowingly collect personal data from minors.
+
+13. Policy Updates
+
+We may update this Data Privacy Policy from time to time.
+
+When updates occur:
+
+A new version number and date will be published
+
+Continued use of the Service indicates acceptance of the updated Policy
+
+14. Governing Law
+
+This Policy is governed by applicable data protection and privacy laws based on the jurisdiction of the Service operator.
+
+15. Contact and Questions
+
+If you have questions or concerns about this Privacy Policy or data handling practices, you may contact us through the official support channels provided within the Application.
+
+By clicking “I Agree”, you confirm that you have read, understood, and accepted this Data Privacy Policy.</p>
     </div>
-    <div class="modal-actions">
-      <button id="agreePrivacy" disabled>I Agree</button>
-      <button onclick="closePrivacy()">Go Back</button>
-    </div>
+    <button id="agreePrivacy" disabled>I Agree</button>
   </div>
 </div>
 
-<script type="module" src="./scripts/signup.js"></script>
-
 <script>
-  /* BUTTON ANIMATION */
-  const signupBtn = document.getElementById("signupBtn");
-  signupBtn.addEventListener("click", () => {
-    signupBtn.classList.add("loading");
-    signupBtn.disabled = true;
-  });
-
-  /* MODAL TRIGGERS */
-  document.getElementById("termsRow").onclick = () => {
-    document.getElementById("termsModal").style.display = "flex";
+  const toggle = document.getElementById("togglePassword");
+  const password = document.getElementById("password");
+  toggle.onclick = () => {
+    password.type = password.type === "password" ? "text" : "password";
   };
 
-  document.getElementById("privacyRow").onclick = () => {
-    document.getElementById("privacyModal").style.display = "flex";
-  };
+  function setupModal(box, modal, body, agree) {
+    box.onclick = () => modal.style.display = "flex";
 
-  /* SCROLL ENFORCEMENT */
-  document.getElementById("termsBody").onscroll = () => {
-    const body = document.getElementById("termsBody");
-    if (body.scrollTop + body.clientHeight >= body.scrollHeight - 10) {
-      document.getElementById("agreeTerms").disabled = false;
-    }
-  };
+    body.onscroll = () => {
+      if (body.scrollTop + body.clientHeight >= body.scrollHeight - 10) {
+        agree.disabled = false;
+      }
+    };
 
-  document.getElementById("privacyBody").onscroll = () => {
-    const body = document.getElementById("privacyBody");
-    if (body.scrollTop + body.clientHeight >= body.scrollHeight - 10) {
-      document.getElementById("agreePrivacy").disabled = false;
-    }
-  };
-
-  document.getElementById("agreeTerms").onclick = () => {
-    document.getElementById("terms").checked = true;
-    document.getElementById("termsModal").style.display = "none";
-  };
-
-  document.getElementById("agreePrivacy").onclick = () => {
-    document.getElementById("privacy").checked = true;
-    document.getElementById("privacyModal").style.display = "none";
-  };
-
-  function closeTerms() {
-    document.getElementById("termsModal").style.display = "none";
+    agree.onclick = () => {
+      box.checked = true;
+      modal.style.display = "none";
+    };
   }
 
-  function closePrivacy() {
-    document.getElementById("privacyModal").style.display = "none";
-  }
+  setupModal(
+    document.getElementById("terms"),
+    document.getElementById("termsModal"),
+    document.getElementById("termsBody"),
+    document.getElementById("agreeTerms")
+  );
+
+  setupModal(
+    document.getElementById("privacy"),
+    document.getElementById("privacyModal"),
+    document.getElementById("privacyBody"),
+    document.getElementById("agreePrivacy")
+  );
 </script>
 
 </body>
