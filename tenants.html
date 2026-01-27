@@ -227,6 +227,75 @@
       margin-top: 16px;
     }
 
+    /* MODAL ACTIONS */
+.modal-actions {
+  ...
+}
+
+/* =========================
+   MODAL COLOR ENHANCEMENT
+========================= */
+.modal {
+  position: relative;
+}
+
+.modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    #AA7E63,
+    #8f6248
+  );
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.modal h2 {
+  color: #8f6248;
+}
+
+.modal .primary {
+  background: #AA7E63;
+  color: #fff;
+}
+
+.modal .primary:hover {
+  background: #8f6248;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #AA7E63;
+  box-shadow: 0 0 0 2px rgba(170,126,99,0.25);
+}
+
+/* =========================
+   EDIT STATUS DROPDOWN COLOR
+========================= */
+#editTenantStatus {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#editTenantStatus[data-status="Active"] {
+  background-color: #ecfdf5; /* soft green */
+  border-color: #16a34a;
+}
+
+#editTenantStatus[data-status="Moved Out"] {
+  background-color: #f3f4f6; /* soft gray */
+  border-color: #9ca3af;
+}
+
+#editTenantStatus[data-status="Left Without Notice"] {
+  background-color: #f5f5f5;
+  border-color: #111827;
+}
+ 
     @media (min-width: 768px) {
       .mobile-header {
         display: none;
