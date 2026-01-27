@@ -3,26 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard – My Tenant Manager</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- ===============================
        HARD BLOCK RENDER (NO FLASH)
   =============================== -->
   <style>
-    html {
-      visibility: hidden;
-    }
+    html { visibility: hidden; }
   </style>
 
   <!-- ===============================
-       AUTH GATE (BEFORE PAINT)
+       AUTH GATE
   =============================== -->
   <script type="module">
     import { supabase } from "./scripts/supabase.js";
-
     const { data: { session } } = await supabase.auth.getSession();
-
     if (!session) {
       window.location.replace("/login.html");
     } else {
@@ -31,36 +26,103 @@
   </script>
 
   <!-- ===============================
-       BASE UI STYLES (MOBILE-FIRST)
+       BASE + SIDEBAR STYLES
   =============================== -->
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 16px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f8f9fb;
       color: #1a1a1a;
     }
 
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 4px;
+    /* ---------- Layout ---------- */
+    .app {
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    h2 {
-      font-size: 1.1rem;
-      margin-top: 24px;
-      margin-bottom: 12px;
+    /* ---------- Sidebar ---------- */
+    .sidebar {
+      background: #AA7E63;
+      color: #fff;
+      width: 220px;
+      padding: 16px;
+      display: none;
+      flex-shrink: 0;
     }
 
-    p {
-      margin: 4px 0 12px;
+    .sidebar h2 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      color: #fff;
+      text-decoration: none;
       font-size: 0.9rem;
-      color: #555;
+    }
+
+    .nav-link:hover {
+      background: #F4D1B8;
+      color: #000;
+    }
+
+    .nav-link.active {
+      background: #8f6248;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ---------- Mobile Header ---------- */
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #AA7E63;
+      color: #fff;
+    }
+
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* ---------- Mobile Menu Overlay ---------- */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      z-index: 10;
+    }
+
+    .mobile-menu-content {
+      background: #AA7E63;
+      width: 240px;
+      height: 100%;
+      padding: 16px;
+    }
+
+    /* ---------- Main Content ---------- */
+    .content {
+      flex: 1;
+      padding: 16px;
+      max-width: 100%;
     }
 
     .container {
@@ -69,229 +131,177 @@
     }
 
     .card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 10px;
       padding: 16px;
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    .field {
-      margin-bottom: 12px;
-      font-size: 0.9rem;
-    }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    h2 { font-size: 1.05rem; margin: 16px 0 10px; }
+    p { font-size: 0.9rem; color: #555; }
 
-    .field strong {
-      display: inline-block;
-      width: 110px;
-    }
+    .field { margin-bottom: 10px; font-size: 0.9rem; }
+    .field strong { width: 110px; display: inline-block; }
 
     input {
       width: 100%;
       padding: 10px;
-      font-size: 0.9rem;
       border-radius: 6px;
       border: 1px solid #ccc;
+      font-size: 0.9rem;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
-      font-size: 0.95rem;
       border-radius: 8px;
       border: none;
-      cursor: pointer;
       background: #2563eb;
-      color: #ffffff;
-    }
-
-    button.secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    button.danger {
-      background: #dc2626;
-    }
-
-    .nav-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .message {
-      font-size: 0.85rem;
+      color: #fff;
+      font-size: 0.95rem;
       margin-top: 8px;
+      cursor: pointer;
     }
 
-    /* ===============================
-       TABLET
-    =============================== */
-    @media (min-width: 600px) {
-      .nav-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+    button.danger { background: #dc2626; }
 
-    /* ===============================
-       DESKTOP
-    =============================== */
-    @media (min-width: 900px) {
-      .nav-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    /* ---------- Tablet & Desktop ---------- */
+    @media (min-width: 768px) {
+      .mobile-header { display: none; }
+      .sidebar { display: block; }
+      .mobile-menu { display: none !important; }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<!-- ===============================
+     MOBILE HEADER
+=============================== -->
+<div class="mobile-header">
+  <strong>My Tenant Manager</strong>
+  <button class="menu-btn" id="openMenu">☰ Menu</button>
+</div>
 
-    <!-- ===============================
-         HEADER
-    =============================== -->
-    <h1>My Tenant Manager</h1>
-    <p>Bronze Tier Dashboard</p>
-
-    <!-- ===============================
-         PROFILE CARD
-    =============================== -->
-    <div class="card">
-      <h2>Landlord Profile</h2>
-
-      <div class="field">
-        <strong>Email:</strong>
-        <span id="profileEmail">N/A</span>
-      </div>
-
-      <div class="field">
-        <strong>Country:</strong>
-        <span id="profileCountry">N/A</span>
-      </div>
-
-      <div class="field">
-        <strong>Currency:</strong>
-        <span id="profileCurrency">N/A</span>
-      </div>
-
-      <div class="field">
-        <strong>Full Name:</strong>
-        <span id="profileFullName">N/A</span>
-      </div>
-    </div>
-
-    <!-- ===============================
-         EDIT PROFILE
-    =============================== -->
-    <div class="card">
-      <h2>Edit Profile</h2>
-
-      <label for="fullNameInput">Full Name</label>
-      <input id="fullNameInput" type="text">
-
-      <button id="saveProfileBtn">Save Profile</button>
-      <div id="profileMessage" class="message">N/A</div>
-    </div>
-
-    <!-- ===============================
-         NAVIGATION
-    =============================== -->
-    <div class="card">
-      <h2>Manage</h2>
-
-      <div class="nav-grid">
-        <button onclick="location.href='/tenants.html'">Tenants</button>
-        <button onclick="location.href='/rent.html'">Rent</button>
-        <button onclick="location.href='/utilities.html'">Utilities</button>
-        <button onclick="location.href='/payments.html'">Payments</button>
-        <button onclick="location.href='/ledger.html'">General Ledger</button>
-        <button onclick="location.href='/tenant-ledger.html'">Tenant Ledger</button>
-      </div>
-    </div>
-
-    <!-- ===============================
-         SYSTEM ACTIONS
-    =============================== -->
-    <div class="card">
-      <button id="logoutBtn" class="danger">Logout</button>
-    </div>
-
+<!-- ===============================
+     MOBILE MENU
+=============================== -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-content">
+    <h2>Menu</h2>
+    <a class="nav-link active" href="/index.html">Dashboard</a>
+    <a class="nav-link" href="/tenants.html">Tenants</a>
+    <a class="nav-link" href="/rent.html">Rent</a>
+    <a class="nav-link" href="/utilities.html">Utilities</a>
+    <a class="nav-link" href="/payments.html">Payments</a>
+    <a class="nav-link" href="/ledger.html">General Ledger</a>
+    <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
   </div>
+</div>
+
+<div class="app">
 
   <!-- ===============================
-       PAGE LOGIC
+       SIDEBAR (DESKTOP)
   =============================== -->
-  <script type="module">
-    import { supabase } from "./scripts/supabase.js";
-    import { logout } from "./scripts/session.js";
+  <aside class="sidebar">
+    <h2>My Tenant Manager</h2>
+    <a class="nav-link active" href="/index.html">Dashboard</a>
+    <a class="nav-link" href="/tenants.html">Tenants</a>
+    <a class="nav-link" href="/rent.html">Rent</a>
+    <a class="nav-link" href="/utilities.html">Utilities</a>
+    <a class="nav-link" href="/payments.html">Payments</a>
+    <a class="nav-link" href="/ledger.html">General Ledger</a>
+    <a class="nav-link" href="/tenant-ledger.html">Tenant Ledger</a>
+  </aside>
 
-    async function loadProfile() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+  <!-- ===============================
+       MAIN CONTENT
+  =============================== -->
+  <main class="content">
+    <div class="container">
 
-      const { data, error } = await supabase
-        .from("users_profile")
-        .select("email, country, currency_code, currency_symbol, full_name")
-        .eq("id", user.id)
-        .single();
+      <h1>Dashboard</h1>
+      <p>Bronze Tier</p>
 
-      if (error) return;
+      <div class="card">
+        <h2>Landlord Profile</h2>
 
-      document.getElementById("profileEmail").textContent =
-        data.email || "N/A";
+        <div class="field"><strong>Email:</strong> <span id="profileEmail">N/A</span></div>
+        <div class="field"><strong>Country:</strong> <span id="profileCountry">N/A</span></div>
+        <div class="field"><strong>Currency:</strong> <span id="profileCurrency">N/A</span></div>
+        <div class="field"><strong>Full Name:</strong> <span id="profileFullName">N/A</span></div>
+      </div>
 
-      document.getElementById("profileCountry").textContent =
-        data.country || "N/A";
+      <div class="card">
+        <h2>Edit Profile</h2>
+        <input id="fullNameInput" type="text" placeholder="Full name">
+        <button id="saveProfileBtn">Save Profile</button>
+        <div id="profileMessage" class="message">N/A</div>
+      </div>
 
-      document.getElementById("profileCurrency").textContent =
-        `${data.currency_symbol} (${data.currency_code})`;
+      <div class="card">
+        <button id="logoutBtn" class="danger">Logout</button>
+      </div>
 
-      document.getElementById("profileFullName").textContent =
-        data.full_name || "N/A";
+    </div>
+  </main>
+</div>
 
-      document.getElementById("fullNameInput").value =
-        data.full_name || "";
-    }
+<!-- ===============================
+     PAGE LOGIC
+=============================== -->
+<script type="module">
+  import { supabase } from "./scripts/supabase.js";
+  import { logout } from "./scripts/session.js";
 
-    async function updateProfile() {
-      const message = document.getElementById("profileMessage");
-      const fullName = document.getElementById("fullNameInput").value.trim();
+  document.getElementById("openMenu").onclick = () =>
+    document.getElementById("mobileMenu").style.display = "block";
 
-      message.textContent = "Saving...";
+  document.getElementById("mobileMenu").onclick = () =>
+    document.getElementById("mobileMenu").style.display = "none";
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        message.textContent = "Not authenticated.";
-        return;
-      }
+  async function loadProfile() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
-      const { error } = await supabase
-        .from("users_profile")
-        .update({ full_name: fullName || "N/A" })
-        .eq("id", user.id);
+    const { data } = await supabase
+      .from("users_profile")
+      .select("email, country, currency_code, currency_symbol, full_name")
+      .eq("id", user.id)
+      .single();
 
-      if (error) {
-        message.textContent = error.message;
-        return;
-      }
+    if (!data) return;
 
-      message.textContent = "Profile updated.";
-      loadProfile();
-    }
+    profileEmail.textContent = data.email || "N/A";
+    profileCountry.textContent = data.country || "N/A";
+    profileCurrency.textContent = `${data.currency_symbol} (${data.currency_code})`;
+    profileFullName.textContent = data.full_name || "N/A";
+    fullNameInput.value = data.full_name || "";
+  }
 
-    document
-      .getElementById("saveProfileBtn")
-      .addEventListener("click", updateProfile);
+  async function updateProfile() {
+    profileMessage.textContent = "Saving...";
+    const fullName = fullNameInput.value.trim();
 
-    document
-      .getElementById("logoutBtn")
-      .addEventListener("click", logout);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
 
+    await supabase.from("users_profile")
+      .update({ full_name: fullName || "N/A" })
+      .eq("id", user.id);
+
+    profileMessage.textContent = "Profile updated.";
     loadProfile();
-  </script>
+  }
+
+  saveProfileBtn.onclick = updateProfile;
+  logoutBtn.onclick = logout;
+  loadProfile();
+</script>
 
 </body>
 </html>
