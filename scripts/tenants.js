@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const submitAddBtn = $("submitAdd");
   const submitEditBtn = $("submitEdit");
-const openAddBtn = document.getElementById("openAddModal");
-const addModal = document.getElementById("addModal");
 
 if (openAddBtn && addModal) {
   openAddBtn.addEventListener("click", () => {
