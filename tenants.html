@@ -125,7 +125,15 @@
       margin: 0 auto;
     }
 
-    h1 { font-size: 1.4rem; margin-bottom: 6px; }
+    /* HEADER ROW */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    h1 { font-size: 1.4rem; margin: 0; }
     h2 { font-size: 1.05rem; margin-bottom: 10px; }
 
     .card {
@@ -134,6 +142,12 @@
       padding: 16px;
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    button.primary {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
 
     label {
@@ -148,13 +162,6 @@
       padding: 8px;
       font-size: 0.9rem;
       margin-top: 4px;
-    }
-
-    button.primary {
-      margin-top: 14px;
-      padding: 10px;
-      font-size: 0.9rem;
-      cursor: pointer;
     }
 
     table {
@@ -177,6 +184,10 @@
     .muted {
       font-size: 0.85rem;
       color: #777;
+    }
+
+    .hidden {
+      display: none;
     }
 
     @media (min-width: 768px) {
@@ -238,29 +249,14 @@
   <main class="content">
     <div class="container">
 
-      <h1>Tenants</h1>
-
-      <!-- ADD TENANT -->
-      <div class="card">
-        <h2>Add Tenant</h2>
-
-        <label for="tenantName">Tenant Name</label>
-        <input id="tenantName" type="text">
-
-        <label for="monthlyRent">Monthly Rent</label>
-        <input id="monthlyRent" type="number" step="0.01">
-
-        <label for="rentDueDay">Rent Due Day (1–31)</label>
-        <input id="rentDueDay" type="number" min="1" max="31">
-
-        <button id="addTenantBtn" class="primary">Add Tenant</button>
-        <div id="tenantMessage" class="muted">N/A</div>
+      <!-- HEADER -->
+      <div class="page-header">
+        <h1>Tenants</h1>
+        <button id="toggleAddTenant" class="primary">+ Add Tenant</button>
       </div>
 
       <!-- TENANT LIST -->
       <div class="card">
-        <h2>Your Tenants</h2>
-
         <table>
           <thead>
             <tr>
@@ -277,6 +273,23 @@
         </table>
       </div>
 
+      <!-- ADD TENANT (HIDDEN BY DEFAULT) -->
+      <div class="card hidden" id="addTenantCard">
+        <h2>Add Tenant</h2>
+
+        <label for="tenantName">Tenant Name</label>
+        <input id="tenantName" type="text">
+
+        <label for="monthlyRent">Monthly Rent</label>
+        <input id="monthlyRent" type="number" step="0.01">
+
+        <label for="rentDueDay">Rent Due Day (1–31)</label>
+        <input id="rentDueDay" type="number" min="1" max="31">
+
+        <button id="addTenantBtn" class="primary">Save Tenant</button>
+        <div id="tenantMessage" class="muted">N/A</div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -288,6 +301,16 @@
   mobileMenu.onclick = () => mobileMenu.style.display = "none";
   logoutBtn.onclick = logout;
   mobileLogout.onclick = logout;
+
+  const toggleBtn = document.getElementById("toggleAddTenant");
+  const addCard = document.getElementById("addTenantCard");
+
+  toggleBtn.onclick = () => {
+    addCard.classList.toggle("hidden");
+    toggleBtn.textContent = addCard.classList.contains("hidden")
+      ? "+ Add Tenant"
+      : "× Close";
+  };
 </script>
 
 <script type="module" src="./scripts/tenants.js"></script>
