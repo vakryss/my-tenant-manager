@@ -38,34 +38,36 @@
     }
 
     /* ===============================
-       SIDEBAR
+       SIDEBAR (CONTENT-FIT WIDTH)
     =============================== */
     .sidebar {
       background: #AA7E63;
       color: #fff;
-      width: 220px;
-      padding: 14px;
+      padding: 14px 16px;
       display: none;
       flex-direction: column;
       justify-content: space-between;
-      flex-shrink: 0;
+
+      /* 🔑 KEY FIX */
+      width: max-content;
+      min-width: 0;
     }
 
     .nav-group {
       display: flex;
       flex-direction: column;
-      gap: 2px; /* 👈 reduced */
+      gap: 2px;
     }
 
     .nav-link {
-      display: inline-block;
-      width: fit-content;
-      padding: 6px 8px;          /* 👈 reduced */
-      line-height: 1.2;          /* 👈 tightened */
+      display: block;              /* full-width inside sidebar */
+      padding: 6px 10px;
+      line-height: 1.2;
       border-radius: 6px;
       color: #fff;
       text-decoration: none;
       font-size: 0.9rem;
+      white-space: nowrap;         /* prevents wrapping */
     }
 
     .nav-link:hover {
@@ -110,12 +112,15 @@
 
     .mobile-menu-content {
       background: #AA7E63;
-      width: 220px;              /* 👈 slightly narrower */
+      padding: 14px 16px;
       height: 100%;
-      padding: 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      /* same behavior as desktop */
+      width: max-content;
+      max-width: 90vw;
     }
 
     /* ===============================
@@ -131,59 +136,9 @@
       margin: 0 auto;
     }
 
-    h1 { font-size: 1.4rem; margin-bottom: 6px; }
-    h2 { font-size: 1.05rem; margin-bottom: 10px; }
-
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .summary {
-      font-size: 0.9rem;
-    }
-
-    .summary strong {
-      font-size: 1.2rem;
-      display: block;
-      margin-top: 4px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-    }
-
-    th {
-      background: #f1f5f9;
-      font-weight: 600;
-    }
-
-    .muted {
-      font-size: 0.85rem;
-      color: #777;
-    }
-
     @media (min-width: 768px) {
       .mobile-header { display: none; }
       .sidebar { display: flex; }
-      .grid-3 { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
