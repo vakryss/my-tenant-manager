@@ -298,10 +298,22 @@
         </div>
 
         <div class="card">
+          <div style="margin-bottom:12px;">
+  <label style="font-size:0.85rem;font-weight:600;">
+    Filter Tenant By Status
+  </label>
+  <select id="statusFilter">
+    <option value="all">Show All</option>
+    <option value="Active">Active</option>
+    <option value="Moved Out">Moved Out</option>
+    <option value="Left Without Notice">Left Without Notice</option>
+  </select>
+</div>
           <table>
             <thead>
               <tr>
                 <th>Tenant Name</th>
+                <th>Status</th>
                 <th>Monthly Rent</th>
                 <th>Due Day</th>
                 <th>Utilities</th>
@@ -369,6 +381,23 @@
         <label><input type="checkbox" value="Water"> Water</label>
         <label><input type="checkbox" value="Wi-Fi"> Wi-Fi</label>
       </div>
+
+      <label>Tenant Status</label>
+<select id="editTenantStatus">
+  <option value="Active">Active</option>
+  <option value="Moved Out">Moved Out</option>
+  <option value="Left Without Notice">Left Without Notice</option>
+</select>
+
+<div id="movedOutDateWrap" style="display:none;">
+  <label>Moved Out Date</label>
+  <input type="date" id="editMovedOutDate">
+</div>
+
+<div id="lastSeenDateWrap" style="display:none;">
+  <label>Last Seen Date</label>
+  <input type="date" id="editLastSeenDate">
+</div>
 
       <div class="modal-actions">
         <button class="secondary" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
