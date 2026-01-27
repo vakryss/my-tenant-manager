@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <td colspan="5">No tenants yet</td>
   </tr>
 `;
+    }
        
     data.forEach(t => {
       const tr = document.createElement("tr");
