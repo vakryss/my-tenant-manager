@@ -1,11 +1,24 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
+/*
+  NOTE:
+  - Using anon key is SAFE and intended for frontend usage.
+  - Security is enforced via Supabase Auth + Row Level Security (RLS).
+  - Service keys must NEVER be used here.
+*/
+
 const SUPABASE_URL = "https://jpjybbldgtwlmisjnzkc.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwanliYmxkZ3R3bG1pc2puemtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkzNTcxODksImV4cCI6MjA4NDkzMzE4OX0.qTU0G7PM5xlIr5ozNTob0glv8w_iQvTeldrGNuhczkw";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwanliYmxkZ3R3bG1pc2puemtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkzNTcxODksImV4cCI6MjA4NDkzMzE4OX0.qTU0G7PM5xlIr5ozNTob0glv8w_iQvTeldrGNuhczkw";
 
 export const supabase = createClient(
   SUPABASE_URL,
-  SUPABASE_ANON_KEY
+  SUPABASE_ANON_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
 );
-
-window.supabase = supabase;
