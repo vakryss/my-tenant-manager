@@ -145,6 +145,15 @@
       padding: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
+    
+/* =========================
+   CARD HEADER (ADD TENANT)
+========================= */
+.card-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
 
     table {
       width: 100%;
@@ -401,7 +410,17 @@ button:active {
     border-radius: 12px;
     padding: 18px;
   }
+  
+@media (max-width: 640px) {
+  .card-header {
+    justify-content: stretch;
+  }
 
+  .card-header button {
+    width: 100%;
+  }
+}
+  
   .modal-actions {
     flex-direction: column-reverse;
     gap: 10px;
@@ -479,10 +498,13 @@ button:active {
       <div class="container">
         <div class="page-header">
           <h1>Tenants</h1>
-          <button id="openAddModal" class="primary">+ Add Tenant</button>
         </div>
 
         <div class="card">
+          <div class="card-header">
+  <button id="openAddModal" class="primary">+ Add Tenant</button>
+</div>
+          
           <div style="margin-bottom:12px;">
   <label style="font-size:0.85rem;font-weight:600;">
     Filter Tenant By Status
