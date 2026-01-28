@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusFilter = $("statusFilter");
 
   const openAddBtn = $("openAddModal");
+  const openAddBtnMobile = $("openAddModalMobile");
   const addModal = $("addModal");
   const editModal = $("editModal");
 
@@ -20,21 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
      OPEN ADD TENANT MODAL
   ========================= */
   if (openAddBtn && addModal) {
-    openAddBtn.addEventListener("click", () => {
-      $("addTenantName").value = "";
-      $("addMonthlyRent").value = "";
-      $("addRentDueDay").value = "";
+  openAddBtn.addEventListener("click", () => {
+    $("addTenantName").value = "";
+    $("addMonthlyRent").value = "";
+    $("addRentDueDay").value = "";
 
-      document
-        .querySelectorAll("#addUtilities input[type='checkbox']")
-        .forEach(cb => cb.checked = false);
+    document
+      .querySelectorAll("#addUtilities input[type='checkbox']")
+      .forEach(cb => cb.checked = false);
 
-      submitAddBtn.disabled = false;
-      submitAddBtn.textContent = "Save";
+    submitAddBtn.disabled = false;
+    submitAddBtn.textContent = "Save";
 
-      addModal.style.display = "flex";
-    });
-  }
+    addModal.style.display = "flex";
+  });
+}
 
   function openModal(m) { if (m) m.style.display = "flex"; }
   function closeModal(m) { if (m) m.style.display = "none"; }
