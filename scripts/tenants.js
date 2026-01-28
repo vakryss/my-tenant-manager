@@ -155,13 +155,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   submitEditBtn.onclick = async () => {
     const payload = {
-      tenant_name: $("editTenantName").value.trim(),
-      status: $("editTenantStatus").value,
-      monthly_rent: Number($("editMonthlyRent").value),
-      rent_due_day: Number($("editRentDueDay").value),
-      moved_out_date: $("editTenantStatus").value === "Moved Out" ? $("editMovedOutDate").value : null,
-      last_seen_date: $("editTenantStatus").value === "Left Without Notice" ? $("editLastSeenDate").value : null
-    };
+  tenant_name: $("editTenantName").value.trim(),
+  status: $("editTenantStatus").value,
+  monthly_rent: Number($("editMonthlyRent").value),
+  rent_due_day: Number($("editRentDueDay").value),
+  utilities: Array.from(
+    document.querySelectorAll("#editUtilities input:checked")
+  ).map(cb => cb.value),
+  moved_out_date: $("editTenantStatus").value === "Moved Out"
+    ? $("editMovedOutDate").value
+    : null,
+  last_seen_date: $("editTenantStatus").value === "Left Without Notice"
+    ? $("editLastSeenDate").value
+    : null
+};
 
     await supabase.from("tenants").update(payload)
       .eq("id", $("editTenantId").value);
