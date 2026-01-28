@@ -372,6 +372,33 @@ button:active {
   }
 }
 
+    /* =========================
+   RESPONSIVE MODALS
+========================= */
+.modal {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Mobile & small tablets */
+@media (max-width: 767px) {
+  .modal {
+    width: calc(100% - 32px);
+    max-width: none;
+    border-radius: 12px;
+    padding: 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+    
     @media (min-width: 768px) {
       .mobile-header {
         display: none;
