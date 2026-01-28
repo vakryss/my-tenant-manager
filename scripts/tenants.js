@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const submitAddBtn = $("submitAdd");
   const submitEditBtn = $("submitEdit");
+  const deleteTenantBtn = $("deleteTenantBtn");
 
   /* =========================
      OPEN ADD TENANT MODAL
@@ -167,6 +168,28 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal(editModal);
     loadTenants();
   };
+
+// 2️⃣ Delete handler (SEPARATE)
+if (deleteTenantBtn) {
+  deleteTenantBtn.onclick = async () => {
+    const confirmed = confirm(
+      "This will permanently delete this tenant.\n\nThis action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    const tenantId = $("editTenantId").value;
+    if (!tenantId) return;
+
+    await supabase
+      .from("tenants")
+      .delete()
+      .eq("id", tenantId);
+
+    closeModal(editModal);
+    loadTenants();
+  };
+}
 
   /* =========================
      ADD TENANT WARNING HANDLERS (FIXED)
