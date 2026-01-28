@@ -95,7 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${renderStatus(t.status || "Active", dateLabel, dateValue, t.id)}</td>
         <td>₱${Number(t.monthly_rent).toFixed(2)}</td>
         <td>${t.rent_due_day}</td>
-        <td>${(t.utilities || []).join(", ") || "—"}</td>
+        <td>${
+  Array.isArray(t.utilities)
+    ? t.utilities.join(", ")
+    : t.utilities
+      ? t.utilities
+      : "—"
+}</td>
         <td><button class="secondary">Edit</button></td>
       `;
       tr.querySelector("button").onclick = () => openEditModal(t);
